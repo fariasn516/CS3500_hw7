@@ -1,5 +1,6 @@
 package cs3500.threetrios.controller;
 
+import cs3500.threetrios.model.Color;
 import cs3500.threetrios.model.Model;
 import cs3500.threetrios.model.player.Player;
 import cs3500.threetrios.view.ThreeTriosFrameView;
@@ -57,7 +58,12 @@ public class ThreeTriosPlayerController {
         this.view.showMessage("This game is a tie!");
       }
       else {
-        this.view.showMessage(this.model.winner() + " has won!");
+        if (this.model.winner().equals("Red Player")) {
+          this.view.showMessage(this.model.winner() + " has won!\n" + "Score: " +
+                  this.model.currentScore(Color.RED));
+        }
+        this.view.showMessage(this.model.winner() + " has won!\n" + "Score: " +
+                this.model.currentScore(Color.BLUE));
       }
     }
     // might need some more stuff here(?)

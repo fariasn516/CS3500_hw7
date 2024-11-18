@@ -43,6 +43,7 @@ public class ThreeTriosModelView extends JFrame implements ThreeTriosFrameView {
 
   @Override
   public void makeVisible() {
+    this.setTitle(panel.getName());
     this.setVisible(true);
   }
 
