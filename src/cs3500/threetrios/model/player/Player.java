@@ -1,6 +1,9 @@
-package cs3500.threetrios.model;
+package cs3500.threetrios.model.player;
 
 import java.util.List;
+
+import cs3500.threetrios.model.Card;
+import cs3500.threetrios.model.Color;
 
 /**
  * Represents the player for the game Three Trios.

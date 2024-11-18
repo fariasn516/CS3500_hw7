@@ -1,9 +1,12 @@
 package cs3500.threetrios.view;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import cs3500.threetrios.controller.Controller;
 import cs3500.threetrios.model.ReadOnlyModel;
+import cs3500.threetrios.model.ThreeTriosModel;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * The frame of the Three Trios game. This is the general frame and graphics will be placed on it
@@ -11,6 +14,7 @@ import cs3500.threetrios.model.ReadOnlyModel;
  */
 public class ThreeTriosModelView extends JFrame implements ThreeTriosFrameView {
   private final ThreeTriosPanel panel; // represents the actual images to be placed on the frame
+  private final ReadOnlyModel model;
 
   /**
    * Constructor for the ThreeTriosModelView. Takes in a model whose game state will be represented
@@ -23,6 +27,7 @@ public class ThreeTriosModelView extends JFrame implements ThreeTriosFrameView {
     this.setSize(1000, 1000);
     this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     this.add(panel);
+    this.model = model;
   }
 
   @Override
@@ -39,5 +44,16 @@ public class ThreeTriosModelView extends JFrame implements ThreeTriosFrameView {
   @Override
   public void makeVisible() {
     this.setVisible(true);
+  }
+
+  // newly added, idk if it works or anything yet
+  @Override
+  public void showMessage(String message) {
+    JOptionPane.showMessageDialog(
+            this, message, "Alert", JOptionPane.ERROR_MESSAGE);
+    if (this.model.isGameOver()) {
+      JOptionPane.showMessageDialog(
+              this, message, "Game Over!", JOptionPane.PLAIN_MESSAGE);
+    }
   }
 }

@@ -1,6 +1,7 @@
 package cs3500.threetrios.view;
 
 import cs3500.threetrios.controller.Controller;
+import cs3500.threetrios.controller.PlayerAction;
 
 /**
  * Interface for the panels; the panels are how the state of the model are to be represented in

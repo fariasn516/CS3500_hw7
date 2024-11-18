@@ -21,4 +21,10 @@ public interface ThreeTriosFrameView {
    * Make the view visible to start the game session.
    */
   void makeVisible();
+
+  /**
+   *
+   * @param message
+   */
+  void showMessage(String message);
 }

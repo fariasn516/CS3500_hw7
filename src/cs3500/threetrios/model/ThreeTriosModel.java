@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import cs3500.threetrios.model.player.HumanPlayer;
+import cs3500.threetrios.model.player.Player;
+
 /**
  * The model class for the game Three Trios, this is where all the rules of gameplay is handled.
  */

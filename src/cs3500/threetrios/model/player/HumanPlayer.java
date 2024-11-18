@@ -1,7 +1,10 @@
-package cs3500.threetrios.model;
+package cs3500.threetrios.model.player;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cs3500.threetrios.model.Card;
+import cs3500.threetrios.model.Color;
 
 /**
  * Represents a human player, aka a player of the game Three Trios.
@@ -79,5 +82,4 @@ public class HumanPlayer implements Player {
   public String toString() {
     return "Player: " + color;
   }
-
 }

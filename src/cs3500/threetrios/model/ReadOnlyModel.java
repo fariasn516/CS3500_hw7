@@ -2,6 +2,8 @@ package cs3500.threetrios.model;
 
 import java.util.List;
 
+import cs3500.threetrios.model.player.Player;
+
 /**
  * The read-only interface for our game model, contains all the observation methods.
  */

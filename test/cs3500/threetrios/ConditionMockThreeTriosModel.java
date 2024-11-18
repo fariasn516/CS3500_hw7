@@ -8,9 +8,9 @@ import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Color;
 import cs3500.threetrios.model.GameGrid;
 import cs3500.threetrios.model.Grid;
-import cs3500.threetrios.model.HumanPlayer;
+import cs3500.threetrios.model.player.HumanPlayer;
 import cs3500.threetrios.model.Model;
-import cs3500.threetrios.model.Player;
+import cs3500.threetrios.model.player.Player;
 import cs3500.threetrios.model.ReadOnlyModel;
 
 /**

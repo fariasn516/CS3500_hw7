@@ -2,7 +2,7 @@ package cs3500.threetrios.strategy;
 
 import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Model;
-import cs3500.threetrios.model.Player;
+import cs3500.threetrios.model.player.Player;
 
 /**
  * A strategy that prioritizes flipping the maximum number of opponent cards.

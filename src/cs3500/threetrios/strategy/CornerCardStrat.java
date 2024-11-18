@@ -6,7 +6,7 @@ import java.util.List;
 import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Direction;
 import cs3500.threetrios.model.Model;
-import cs3500.threetrios.model.Player;
+import cs3500.threetrios.model.player.Player;
 
 /**
  * A strategy that targets corner positions for card placement.

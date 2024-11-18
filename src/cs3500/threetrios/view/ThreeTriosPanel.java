@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import cs3500.threetrios.controller.Controller;
+import cs3500.threetrios.controller.PlayerAction;
 import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Cell;
 import cs3500.threetrios.model.Direction;
@@ -216,7 +217,8 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
    * Mouse listener class, this is the class that allows clicking/takes clicking into account.
    */
   class ThreeTriosMouseListener implements MouseListener {
-    private final Controller features; // represents the list of features of the gui
+    private Controller features; // represents the list of features of the gui
+    private PlayerAction playerFeatures;
 
     /**
      * Constructor for the mouse listener class and takes in a Controller.
@@ -257,7 +259,8 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
           index = -1;
         }
         index = yClick / (getHeight() / model.getRedPlayer().size());
-        features.handleHandClick(index, true);
+        // true (red player has been selected)
+        playerFeatures.onCardSelected(index);
       }
       else {
         if (clickedAlready) {
@@ -271,7 +274,8 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
           clickedAlready = false;
         }
         index = yClick / (getHeight() / model.getBluePlayer().size());
-        features.handleHandClick(index, false);
+        // false (blue player has been selected)
+        playerFeatures.onCardSelected(index);
       }
     }
 
@@ -282,7 +286,7 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
      * @param yClick represents the y coordinate of the click
      */
     private void findGridIndex(int xClick, int yClick) {
-      features.handleCellClick(yClick / (getHeight() / model.getGrid().getNumRows()),
+      playerFeatures.onCellSelected(yClick / (getHeight() / model.getGrid().getNumRows()),
               ((xClick - 200) / ((getWidth() - 400) / model.getGrid().getNumCols())));
     }
 
