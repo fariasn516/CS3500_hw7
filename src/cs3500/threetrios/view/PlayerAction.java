@@ -9,7 +9,7 @@ public interface PlayerAction {
 
   /**
    * Action to take once a card is selected.
-   * @param index represents the index of the selected card
+   * @param card represents the selected card
    */
   void onCardSelected(Card card, boolean selected);
 
