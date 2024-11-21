@@ -1,7 +1,6 @@
 package cs3500.threetrios.view;
 
 import cs3500.threetrios.controller.Controller;
-import cs3500.threetrios.controller.PlayerAction;
 
 /**
  * Interface for the panels; the panels are how the state of the model are to be represented in
@@ -13,7 +12,7 @@ public interface ThreeTriosPanelView {
    * Listener that handles the clicking which then feeds back to controller so that it can
    * call the correct model rule handling.
    */
-  void addClickListener(Controller listener);
+  void addClickListener(PlayerAction listener);
 
   /**
    * Returns the name at the top of the GUI graphics, indicating which player's turn it is.

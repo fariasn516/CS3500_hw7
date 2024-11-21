@@ -54,7 +54,7 @@ public class ThreeTriosSwingController implements Controller {
       throw new IllegalStateException(e.getMessage());
     }
 
-    view.addClickListener(this);
+    //view.addClickListener(this);
     view.makeVisible();
   }
 
@@ -78,7 +78,7 @@ public class ThreeTriosSwingController implements Controller {
     catch (IllegalStateException e) {
       throw new IllegalStateException(e.getMessage());
     }
-    view.addClickListener(this);
+    //view.addClickListener(this);
     view.makeVisible();
   }
 

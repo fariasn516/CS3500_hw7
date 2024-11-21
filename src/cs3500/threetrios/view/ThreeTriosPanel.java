@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import cs3500.threetrios.controller.Controller;
-import cs3500.threetrios.controller.PlayerAction;
+import cs3500.threetrios.controller.PlayerController;
 import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Cell;
 import cs3500.threetrios.model.Direction;
@@ -39,7 +39,7 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
   }
 
   @Override
-  public void addClickListener(Controller listener) {
+  public void addClickListener(PlayerAction listener) {
     this.addMouseListener(new ThreeTriosMouseListener(listener));
   }
 
@@ -217,14 +217,13 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
    * Mouse listener class, this is the class that allows clicking/takes clicking into account.
    */
   class ThreeTriosMouseListener implements MouseListener {
-    private Controller features; // represents the list of features of the gui
-    private PlayerAction playerFeatures;
+    private PlayerAction features; // represents the list of features of the gui
 
     /**
      * Constructor for the mouse listener class and takes in a Controller.
      * @param features represents the Controller with the features
      */
-    public ThreeTriosMouseListener(Controller features) {
+    public ThreeTriosMouseListener(PlayerAction features) {
       this.features = features;
     }
 
@@ -260,7 +259,8 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
         }
         index = yClick / (getHeight() / model.getRedPlayer().size());
         // true (red player has been selected)
-        playerFeatures.onCardSelected(index);
+        Card card = model.getCurrentPlayer().getCardsInHand().get(index);
+        features.onCardSelected(card, true);
       }
       else {
         if (clickedAlready) {
@@ -275,7 +275,8 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
         }
         index = yClick / (getHeight() / model.getBluePlayer().size());
         // false (blue player has been selected)
-        playerFeatures.onCardSelected(index);
+        Card card = model.getCurrentPlayer().getCardsInHand().get(index);
+        features.onCardSelected(card, false);
       }
     }
 
@@ -286,7 +287,7 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
      * @param yClick represents the y coordinate of the click
      */
     private void findGridIndex(int xClick, int yClick) {
-      playerFeatures.onCellSelected(yClick / (getHeight() / model.getGrid().getNumRows()),
+      features.placeCard(yClick / (getHeight() / model.getGrid().getNumRows()),
               ((xClick - 200) / ((getWidth() - 400) / model.getGrid().getNumCols())));
     }
 

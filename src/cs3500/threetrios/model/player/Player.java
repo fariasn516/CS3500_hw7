@@ -4,6 +4,7 @@ import java.util.List;
 
 import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Color;
+import cs3500.threetrios.view.PlayerAction;
 
 /**
  * Represents the player for the game Three Trios.
@@ -55,5 +56,14 @@ public interface Player {
    */
   List<Card> getOwnedCardsOnGrid();
 
+  /**
+   *
+   * @param card
+   */
   void addToHand(Card card);
+
+  /**
+   *
+   */
+  void addListener(PlayerAction listener);
 }

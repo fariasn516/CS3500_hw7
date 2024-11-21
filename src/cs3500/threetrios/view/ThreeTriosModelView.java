@@ -3,6 +3,7 @@ package cs3500.threetrios.view;
 import javax.swing.*;
 
 import cs3500.threetrios.controller.Controller;
+import cs3500.threetrios.controller.PlayerController;
 import cs3500.threetrios.model.ReadOnlyModel;
 import cs3500.threetrios.model.ThreeTriosModel;
 
@@ -37,14 +38,14 @@ public class ThreeTriosModelView extends JFrame implements ThreeTriosFrameView {
   }
 
   @Override
-  public void addClickListener(Controller listener) {
+  public void addClickListener(PlayerAction listener) {
     panel.addClickListener(listener);
   }
 
   @Override
   public void makeVisible() {
-    this.setTitle(panel.getName());
     this.setVisible(true);
+    this.setTitle(panel.getName());
   }
 
   // newly added, idk if it works or anything yet

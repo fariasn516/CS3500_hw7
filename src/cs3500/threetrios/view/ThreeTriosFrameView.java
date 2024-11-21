@@ -1,6 +1,7 @@
 package cs3500.threetrios.view;
 
 import cs3500.threetrios.controller.Controller;
+import cs3500.threetrios.controller.PlayerController;
 
 /**
  * Represents the frame of the gui graphics, this is where all the actual graphics of the game will
@@ -15,7 +16,7 @@ public interface ThreeTriosFrameView {
   /**
    * Helps with handling of clicking onto the GUI.
    */
-  void addClickListener(Controller listener);
+  void addClickListener(PlayerAction listener);
 
   /**
    * Make the view visible to start the game session.

@@ -5,14 +5,17 @@ import java.util.List;
 
 import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Color;
+import cs3500.threetrios.model.Model;
+import cs3500.threetrios.view.PlayerAction;
 
 /**
  * Represents a human player, aka a player of the game Three Trios.
  */
 public class HumanPlayer implements Player {
-  private final List<Card> cardsInHand; // represents the cards in the hand
-  private final List<Card> ownedCardsOnGrid; // represents the cards that are owned and on the grid
-  private final Color color; // represents this player's color
+  private List<Card> cardsInHand; // represents the cards in the hand
+  private List<Card> ownedCardsOnGrid; // represents the cards that are owned and on the grid
+  private Color color; // represents this player's color
+  private Model model;
 
   /**
    * Constructor for the HumanPlayer class.
@@ -29,6 +32,10 @@ public class HumanPlayer implements Player {
     this.color = color;
     this.cardsInHand = cardsInHand;
     this.ownedCardsOnGrid = new ArrayList<>();
+  }
+
+  public HumanPlayer(Model model) {
+    this.model = model;
   }
 
   @Override
@@ -81,5 +88,10 @@ public class HumanPlayer implements Player {
   @Override
   public String toString() {
     return "Player: " + color;
+  }
+
+  @Override
+  public void addListener(PlayerAction listener) {
+    return;
   }
 }

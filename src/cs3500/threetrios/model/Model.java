@@ -52,4 +52,6 @@ public interface Model extends ReadOnlyModel {
    * @throws IllegalArgumentException if the given card is not in the player's hand.
    */
   void takeTurn(Card card, int row, int col);
+
+  void addListener(ModelStatus listener);
 }

@@ -20,6 +20,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel {
   private boolean started; // determines whether the game has started or not
   private boolean gameEnded; // determines whether the game has ended or not
   private final Random rand; // helps with shuffling of the cards if needed
+  private final List<ModelStatus> listeners; // represents the listeners for the model
 
   // INVARIANT: The number of card cells on the grid is always one less than the total amount of
   // cards that are being played with.
@@ -29,6 +30,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel {
    */
   public ThreeTriosModel() {
     this.rand = new Random();
+    this.listeners = new ArrayList<>();
   }
 
   /**
@@ -41,6 +43,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel {
       throw new IllegalArgumentException("Random cannot be null");
     }
     this.rand = rand;
+    this.listeners = new ArrayList<>();
   }
 
   @Override
@@ -401,5 +404,10 @@ public class ThreeTriosModel implements Model, ReadOnlyModel {
       throw new IllegalStateException("Game not started!");
     }
     return new ArrayList<>(this.redPlayer.getCardsInHand());
+  }
+
+  @Override
+  public void addListener(ModelStatus listener) {
+    this.listeners.add(listener);
   }
 }

@@ -1,19 +1,25 @@
 package cs3500.threetrios.controller;
 
+import java.io.IOException;
+import java.util.List;
+
+import cs3500.threetrios.model.Card;
+import cs3500.threetrios.model.CardFileParser;
 import cs3500.threetrios.model.Color;
+import cs3500.threetrios.model.Grid;
+import cs3500.threetrios.model.GridFileParser;
 import cs3500.threetrios.model.Model;
 import cs3500.threetrios.model.player.Player;
 import cs3500.threetrios.view.ThreeTriosFrameView;
 
-// NOTE: NORMALLY I WOULD IMPLEMENT INTERFACES, BUT IM KIND OF CONFUSED ON WHAT INTERFACE TO
-// IMPLEMENT AS OF RIGHT NOW, SHALL LINK LATER
 /**
  *
  */
-public class ThreeTriosPlayerController {
+public class ThreeTriosPlayerController implements PlayerController {
   Model model; // represents the model where all the rules of ThreeTrios is being run
   Player player; // represent the player that is playing the game
   ThreeTriosFrameView view; // represents the view that shows the game state as a GUI
+  Card selectedCard; // represents the card that is currently selected
 
   /**
    *
@@ -41,18 +47,33 @@ public class ThreeTriosPlayerController {
     this.player.addListener(this);
   }
 
-  public void placeCard (int row, int col, int index) {
-    try {
-      this.model.takeTurn(player.getCardsInHand().get(index), row, col);
-    }
-    catch (IllegalArgumentException | IllegalStateException e) {
-      this.view.showMessage(e.getMessage());
+  @Override
+  public void placeCard (int row, int col) {
+    if (this.selectedCard != null) {
+      try {
+        this.model.takeTurn(this.selectedCard, row, col);
+      }
+      catch (IllegalArgumentException | IllegalStateException e) {
+        this.view.showMessage(e.getMessage());
+      }
     }
 
     this.view.refresh();
   }
 
-  public void turn() {
+  @Override
+  public void onCardSelected(Card card, boolean selected) {
+    if (this.selectedCard != card) {
+      this.selectedCard = card;
+    }
+    else {
+      this.selectedCard = null;
+    }
+    view.refresh();
+  }
+
+  @Override
+  public void notifyStatus() {
     if (this.model.isGameOver()) {
       if (this.model.winner().equals("Tie")) {
         this.view.showMessage("This game is a tie!");
@@ -68,5 +89,21 @@ public class ThreeTriosPlayerController {
     }
     // might need some more stuff here(?)
     this.view.refresh();
+  }
+
+  @Override
+  public void startGame(String gridPath, String deckPath, boolean shuffle) {
+    Grid grid;
+    List<Card> deck;
+    try {
+      grid = new GridFileParser(gridPath).createGridFromFile();
+      deck = new CardFileParser(deckPath).createDeck();
+    }
+    catch (IOException e) {
+      throw new IllegalArgumentException(e.getMessage());
+    }
+    model.startGame(deck, shuffle, grid);
+    view.refresh();
+    view.makeVisible();
   }
 }
