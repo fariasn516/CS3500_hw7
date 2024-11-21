@@ -66,5 +66,7 @@ public class Main {
     controller1.startGame("configurationFiles/GridConfiguration/HasHoles",
             "configurationFiles/CardConfiguration/MaxCards", false);
     PlayerController controller2 = new ThreeTriosPlayerController(model, player2, viewPlayer2);
+    controller2.startGame("configurationFiles/GridConfiguration/HasHoles",
+            "configurationFiles/CardConfiguration/MaxCards", false);
   }
 }

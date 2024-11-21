@@ -140,7 +140,14 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
    */
   private void drawRedPlayer(Graphics2D g2d) {
     List<Card> redCards = model.getRedPlayer();
-    int redHeight = getHeight() / model.getRedPlayer().size() + 1;
+    int redHeight;
+    if (model.getRedPlayer().isEmpty()) {
+      redHeight = getHeight();
+      g2d.drawRect(0, 0, 150, redHeight);
+    }
+    else {
+      redHeight = getHeight() / model.getRedPlayer().size() + 1;
+    }
     int startRedHeight = 0;
 
     for (int numRedCards = 0; numRedCards < model.getRedPlayer().size(); numRedCards++) {

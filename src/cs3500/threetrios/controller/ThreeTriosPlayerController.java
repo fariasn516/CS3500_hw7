@@ -95,14 +95,16 @@ public class ThreeTriosPlayerController implements PlayerController {
   public void startGame(String gridPath, String deckPath, boolean shuffle) {
     Grid grid;
     List<Card> deck;
-    try {
-      grid = new GridFileParser(gridPath).createGridFromFile();
-      deck = new CardFileParser(deckPath).createDeck();
+    if (!model.hasStarted()) {
+      try {
+        grid = new GridFileParser(gridPath).createGridFromFile();
+        deck = new CardFileParser(deckPath).createDeck();
+      }
+      catch (IOException e) {
+        throw new IllegalArgumentException(e.getMessage());
+      }
+      model.startGame(deck, shuffle, grid);
     }
-    catch (IOException e) {
-      throw new IllegalArgumentException(e.getMessage());
-    }
-    model.startGame(deck, shuffle, grid);
     view.refresh();
     view.makeVisible();
   }
