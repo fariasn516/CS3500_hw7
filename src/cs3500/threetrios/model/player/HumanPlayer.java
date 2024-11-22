@@ -12,10 +12,9 @@ import cs3500.threetrios.view.PlayerAction;
  * Represents a human player, aka a player of the game Three Trios.
  */
 public class HumanPlayer implements Player {
-  private List<Card> cardsInHand; // represents the cards in the hand
-  private List<Card> ownedCardsOnGrid; // represents the cards that are owned and on the grid
-  private Color color; // represents this player's color
-  private Model model;
+  private final List<Card> cardsInHand; // represents the cards in the hand
+  private final List<Card> ownedCardsOnGrid; // represents the cards that are owned and on the grid
+  private final Color color; // represents this player's color
 
   /**
    * Constructor for the HumanPlayer class.
@@ -40,8 +39,9 @@ public class HumanPlayer implements Player {
    * @param color
    */
   public HumanPlayer(Model model, Color color) {
-    this.model = model;
     this.color = color;
+    this.cardsInHand = new ArrayList<>();
+    this.ownedCardsOnGrid = new ArrayList<>();
   }
 
   @Override
@@ -98,6 +98,11 @@ public class HumanPlayer implements Player {
 
   @Override
   public void addListener(PlayerAction listener) {
+    return;
+  }
+
+  @Override
+  public void takeTurn() {
     return;
   }
 }

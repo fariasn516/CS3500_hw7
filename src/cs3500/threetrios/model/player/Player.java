@@ -11,6 +11,11 @@ import cs3500.threetrios.view.PlayerAction;
  */
 public interface Player {
   /**
+   *
+   */
+  void takeTurn();
+
+  /**
    * Removes the specified card from the player's hand.
    *
    * @param card the card to remove from the player's hand.

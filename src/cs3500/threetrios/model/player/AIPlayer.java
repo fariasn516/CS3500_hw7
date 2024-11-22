@@ -1,8 +1,94 @@
 package cs3500.threetrios.model.player;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cs3500.threetrios.model.Card;
+import cs3500.threetrios.model.Color;
+import cs3500.threetrios.model.Model;
+import cs3500.threetrios.strategy.GameMove;
+import cs3500.threetrios.strategy.GameStrategy;
+import cs3500.threetrios.view.PlayerAction;
+
 /**
- * This class represents an AI player that will be implemented later.
+ * This class represents an AI player for the game ThreeTrios, things are played based on
+ *
  */
-public class AIPlayer {
-  // to be implemented later
+public class AIPlayer implements Player {
+  private final List<Card> cardsInHand; // represents the cards in the hand
+  private final List<Card> ownedCardsOnGrid; // represents the cards that are owned and on the grid
+  private final Color color; // represents the color of this player
+  private final Model model; // represents the passed-in model for the AI player
+  private final GameStrategy strat; // represents the strategy(ies) to be used
+  private PlayerAction features; // represents the observer that notifies the turn
+
+  public AIPlayer(Color color, Model model, GameStrategy strat, PlayerAction features) {
+    this.color = color;
+    this.model = model;
+    this.strat = strat;
+    this.features = features;
+    this.cardsInHand = new ArrayList<>();
+    this.ownedCardsOnGrid = new ArrayList<>();
+  }
+
+  @Override
+  public void takeTurn() {
+    GameMove move = this.strat.chooseMove(this.model);
+    try {
+     this.features.onCardSelected(move.getCard());
+     this.features.placeCard(move.getRow(), move.getCol());
+    }
+    catch (IllegalArgumentException | IllegalStateException e) {
+      throw new IllegalStateException("Something went wrong with the AI");
+    }
+  }
+
+
+  @Override
+  public void removeFromHand(Card card) {
+    this.cardsInHand.remove(card);
+  }
+
+  @Override
+  public void removeFromOwnership(Card card) {
+    if (!ownedCardsOnGrid.contains(card)) {
+      throw new IllegalArgumentException("The card is not in the player's grid yet.");
+    }
+    this.ownedCardsOnGrid.remove(card);
+  }
+
+  @Override
+  public void addToOwnership(Card cards) {
+    this.ownedCardsOnGrid.add(cards);
+  }
+
+  @Override
+  public List<Card> getCardsInHand() {
+    return List.of();
+  }
+
+  @Override
+  public int getNumberCardsOwned() {
+    return this.ownedCardsOnGrid.size() + this.cardsInHand.size();
+  }
+
+  @Override
+  public Color getColor() {
+    return this.color;
+  }
+
+  @Override
+  public List<Card> getOwnedCardsOnGrid() {
+    return new ArrayList<>(this.ownedCardsOnGrid);
+  }
+
+  @Override
+  public void addToHand(Card card) {
+    this.cardsInHand.add(card);
+  }
+
+  @Override
+  public void addListener(PlayerAction listener) {
+    this.features = listener;
+  }
 }
