@@ -12,7 +12,7 @@ import cs3500.threetrios.model.player.Player;
 /**
  * The model class for the game Three Trios, this is where all the rules of gameplay is handled.
  */
-public class ThreeTriosModel implements Model, ReadOnlyModel {
+public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
   private Player bluePlayer; // the blue player
   private Player redPlayer; // the red player
   private Player currentPlayer;
@@ -217,6 +217,8 @@ public class ThreeTriosModel implements Model, ReadOnlyModel {
     if (!isGameOver()) {
       currentPlayer = (currentPlayer == bluePlayer) ? redPlayer : bluePlayer;
     }
+
+    notifyStatus();
   }
 
   @Override
@@ -412,5 +414,12 @@ public class ThreeTriosModel implements Model, ReadOnlyModel {
   @Override
   public void addListener(ModelStatus listener) {
     this.listeners.add(listener);
+  }
+
+  @Override
+  public void notifyStatus() {
+    for (ModelStatus listener : this.listeners) {
+      listener.notifyStatus();
+    }
   }
 }

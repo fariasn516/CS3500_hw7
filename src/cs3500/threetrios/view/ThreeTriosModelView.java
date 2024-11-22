@@ -7,6 +7,7 @@ import cs3500.threetrios.controller.PlayerController;
 import cs3500.threetrios.model.Color;
 import cs3500.threetrios.model.ReadOnlyModel;
 import cs3500.threetrios.model.ThreeTriosModel;
+import cs3500.threetrios.model.player.Player;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 

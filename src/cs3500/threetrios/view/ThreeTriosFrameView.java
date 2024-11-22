@@ -2,6 +2,7 @@ package cs3500.threetrios.view;
 
 import cs3500.threetrios.controller.Controller;
 import cs3500.threetrios.controller.PlayerController;
+import cs3500.threetrios.model.player.Player;
 
 /**
  * Represents the frame of the gui graphics, this is where all the actual graphics of the game will

@@ -9,6 +9,7 @@ import cs3500.threetrios.model.Color;
 import cs3500.threetrios.model.Grid;
 import cs3500.threetrios.model.GridFileParser;
 import cs3500.threetrios.model.Model;
+import cs3500.threetrios.model.player.AIPlayer;
 import cs3500.threetrios.model.player.Player;
 import cs3500.threetrios.view.ThreeTriosFrameView;
 
@@ -21,6 +22,7 @@ public class ThreeTriosPlayerController implements PlayerController {
   ThreeTriosFrameView view; // represents the view that shows the game state as a GUI
   Card selectedCard; // represents the card that is currently selected
   boolean yourTurn; // represents whether it is this player's turn
+  boolean turnOver;
 
   /**
    *
@@ -47,6 +49,7 @@ public class ThreeTriosPlayerController implements PlayerController {
     this.player.addListener(this);
 
     this.yourTurn = this.player.getColor().equals(Color.RED);
+    this.turnOver = false;
   }
 
   @Override
@@ -68,13 +71,12 @@ public class ThreeTriosPlayerController implements PlayerController {
     else {
       view.showMessage("Not your turn!");
     }
+    this.turnOver = false;
     this.view.refresh();
   }
 
   @Override
   public void onCardSelected(Card card) {
-    notifyTurn();
-    System.err.println(this.selectedCard);
     if (yourTurn) {
       if (this.selectedCard != card) {
         this.selectedCard = card;
@@ -92,6 +94,7 @@ public class ThreeTriosPlayerController implements PlayerController {
 
   @Override
   public void notifyStatus() {
+    yourTurn = model.getCurrentPlayer().getColor().equals(player.getColor());
     if (this.model.isGameOver()) {
       if (this.model.winner().equals("Tie")) {
         this.view.showMessage("This game is a tie!");
@@ -104,6 +107,9 @@ public class ThreeTriosPlayerController implements PlayerController {
         this.view.showMessage(this.model.winner() + " has won!\n" + "Score: " +
                 this.model.currentScore(Color.BLUE));
       }
+    }
+    if (this.yourTurn && this.player instanceof AIPlayer) {
+      this.player.takeTurn();
     }
     this.view.refresh();
   }
@@ -122,6 +128,9 @@ public class ThreeTriosPlayerController implements PlayerController {
       }
       try {
         model.startGame(deck, shuffle, grid);
+        if (this.player instanceof AIPlayer) {
+          this.player.takeTurn();
+        }
       }
       catch (IllegalArgumentException | IllegalStateException e) {
         throw new IllegalArgumentException(e.getMessage());
@@ -129,10 +138,5 @@ public class ThreeTriosPlayerController implements PlayerController {
     }
     view.refresh();
     view.makeVisible();
-  }
-
-  @Override
-  public void notifyTurn() {
-    yourTurn = model.getCurrentPlayer().getColor().equals(player.getColor());
   }
 }

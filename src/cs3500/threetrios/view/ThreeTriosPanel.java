@@ -26,7 +26,7 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
   private boolean clickedAlready; // represents whether a cell has been clicked already
   private int index; // represents the index of a clicked card (is -1 if no card clicked)
   private boolean left; // represents which side was clicked
-  private final String panelColor;
+  private final String panelColor; // represents color of this panel
 
   /**
    * Constructor the for panel. Takes in a ReadOnlyModel that is immutable.

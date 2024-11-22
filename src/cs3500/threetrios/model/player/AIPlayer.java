@@ -22,11 +22,10 @@ public class AIPlayer implements Player {
   private final GameStrategy strat; // represents the strategy(ies) to be used
   private PlayerAction features; // represents the observer that notifies the turn
 
-  public AIPlayer(Color color, Model model, GameStrategy strat, PlayerAction features) {
-    this.color = color;
+  public AIPlayer(Model model, Color color, GameStrategy strat) {
     this.model = model;
+    this.color = color;
     this.strat = strat;
-    this.features = features;
     this.cardsInHand = new ArrayList<>();
     this.ownedCardsOnGrid = new ArrayList<>();
   }
@@ -35,8 +34,8 @@ public class AIPlayer implements Player {
   public void takeTurn() {
     GameMove move = this.strat.chooseMove(this.model);
     try {
-     this.features.onCardSelected(move.getCard());
-     this.features.placeCard(move.getRow(), move.getCol());
+      this.features.onCardSelected(move.getCard());
+      this.features.placeCard(move.getRow(), move.getCol());
     }
     catch (IllegalArgumentException | IllegalStateException e) {
       throw new IllegalStateException("Something went wrong with the AI");
@@ -64,7 +63,7 @@ public class AIPlayer implements Player {
 
   @Override
   public List<Card> getCardsInHand() {
-    return List.of();
+    return new ArrayList<>(this.cardsInHand);
   }
 
   @Override

@@ -14,9 +14,4 @@ public interface PlayerController extends PlayerAction, ModelStatus {
    * @param shuffle
    */
   void startGame(String gridPath, String deckPath, boolean shuffle);
-
-  /**
-   *
-   */
-  void notifyTurn();
 }
