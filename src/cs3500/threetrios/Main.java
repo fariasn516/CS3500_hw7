@@ -7,6 +7,7 @@ import cs3500.threetrios.controller.PlayerController;
 import cs3500.threetrios.controller.ThreeTriosPlayerController;
 import cs3500.threetrios.controller.ThreeTriosSwingController;
 import cs3500.threetrios.model.Card;
+import cs3500.threetrios.model.Color;
 import cs3500.threetrios.model.GameGrid;
 import cs3500.threetrios.model.Grid;
 import cs3500.threetrios.model.Model;
@@ -29,7 +30,7 @@ public class Main {
    * @param args represents a String of inputs from the console
    */
   public static void main(String[] args) {
-    Card ratCard = new SimpleCard("rat", Value.ACE, Value.ONE, Value.TWO, Value.THREE);
+    /*Card ratCard = new SimpleCard("rat", Value.ACE, Value.ONE, Value.TWO, Value.THREE);
     Card oxCard = new SimpleCard("ox", Value.ACE, Value.ONE, Value.TWO, Value.THREE);
     Card tigerCard = new SimpleCard("tiger", Value.TWO, Value.ONE, Value.FIVE, Value.SIX);
     Card rabbitCard = new SimpleCard("rabbit", Value.FOUR, Value.NINE, Value.ACE, Value.THREE);
@@ -41,32 +42,29 @@ public class Main {
     List<Card> deck = List.of(ratCard, oxCard, tigerCard, rabbitCard, dragonCard, horseCard,
             goatCard, monkeyCard);
 
-    //Model model = new ThreeTriosModel();
-
     boolean[][] hasAHole = {
             {false, false, false},
             {false, true, true},
             {false, false, false}
     };
-    Grid gridWithNoHoles = new GameGrid(3, 3, hasAHole);
-
-    /*ThreeTriosFrameView view = new ThreeTriosModelView(model);
-    Controller controller = new ThreeTriosSwingController(view);
-    controller.playGame(model, deck, gridWithNoHoles, false);
-    model.takeTurn(ratCard, 0, 0);
-    model.takeTurn(oxCard, 1, 0);
-    model.takeTurn(tigerCard, 2, 2);*/
+    Grid gridWithNoHoles = new GameGrid(3, 3, hasAHole); */
 
     Model model = new ThreeTriosModel();
-    ThreeTriosFrameView viewPlayer1 = new ThreeTriosModelView(model);
-    ThreeTriosFrameView viewPlayer2 = new ThreeTriosModelView(model);
-    Player player1 = new HumanPlayer(model);
-    Player player2 = new HumanPlayer(model);
+    ThreeTriosFrameView viewPlayer1 = new ThreeTriosModelView(model, Color.RED);
+    ThreeTriosFrameView viewPlayer2 = new ThreeTriosModelView(model, Color.BLUE);
+    Player player1 = new HumanPlayer(model, Color.RED);
+    Player player2 = new HumanPlayer(model, Color.BLUE);
     PlayerController controller1 = new ThreeTriosPlayerController(model, player1, viewPlayer1);
     controller1.startGame("configurationFiles/GridConfiguration/HasHoles",
             "configurationFiles/CardConfiguration/MaxCards", false);
     PlayerController controller2 = new ThreeTriosPlayerController(model, player2, viewPlayer2);
     controller2.startGame("configurationFiles/GridConfiguration/HasHoles",
             "configurationFiles/CardConfiguration/MaxCards", false);
+
+    while (!model.isGameOver()) {
+      viewPlayer1.refresh();
+      viewPlayer2.refresh();
+    }
   }
+
 }

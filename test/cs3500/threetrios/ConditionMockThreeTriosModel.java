@@ -8,6 +8,7 @@ import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Color;
 import cs3500.threetrios.model.GameGrid;
 import cs3500.threetrios.model.Grid;
+import cs3500.threetrios.model.ModelStatus;
 import cs3500.threetrios.model.player.HumanPlayer;
 import cs3500.threetrios.model.Model;
 import cs3500.threetrios.model.player.Player;
@@ -93,6 +94,11 @@ public class ConditionMockThreeTriosModel implements Model, ReadOnlyModel {
   @Override
   public void takeTurn(Card card, int row, int col) {
     // not meant to do anything, just stuff from interface(s)
+  }
+
+  @Override
+  public void addListener(ModelStatus listener) {
+    // not meant to do anything
   }
 
   @Override

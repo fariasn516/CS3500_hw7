@@ -297,6 +297,9 @@ public class ThreeTriosModel implements Model, ReadOnlyModel {
     }
   }
 
+  /**
+   *
+   */
   private void checkGameState() {
     if (!started) {
       throw new IllegalStateException("Game not started!");

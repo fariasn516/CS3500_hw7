@@ -17,9 +17,10 @@ import cs3500.threetrios.view.ThreeTriosFrameView;
  */
 public class ThreeTriosPlayerController implements PlayerController {
   Model model; // represents the model where all the rules of ThreeTrios is being run
-  Player player; // represent the player that is playing the game
+  Player player; // represents the player that is playing the game
   ThreeTriosFrameView view; // represents the view that shows the game state as a GUI
   Card selectedCard; // represents the card that is currently selected
+  boolean yourTurn; // represents whether it is this player's turn
 
   /**
    *
@@ -41,35 +42,52 @@ public class ThreeTriosPlayerController implements PlayerController {
     this.player = player;
     this.view = view;
 
-    // wishlist(?) methods that adds itself to the features interfaces
     this.model.addListener(this);
     this.view.addClickListener(this);
     this.player.addListener(this);
+
+    this.yourTurn = this.player.getColor().equals(Color.RED);
   }
 
   @Override
   public void placeCard (int row, int col) {
-    if (this.selectedCard != null) {
-      try {
-        this.model.takeTurn(this.selectedCard, row, col);
+    if (yourTurn) {
+      if (this.selectedCard != null) {
+        try {
+          System.err.println(this.selectedCard + " " + row + " " + col);
+          this.model.takeTurn(this.selectedCard, row, col);
+          this.selectedCard = null;
+        }
+        catch (IllegalArgumentException | IllegalStateException e) {
+          this.view.showMessage(e.getMessage());
+          this.selectedCard = null;
+        }
       }
-      catch (IllegalArgumentException | IllegalStateException e) {
-        this.view.showMessage(e.getMessage());
-      }
+      notifyStatus();
     }
-
+    else {
+      view.showMessage("Not your turn!");
+    }
     this.view.refresh();
   }
 
   @Override
-  public void onCardSelected(Card card, boolean selected) {
-    if (this.selectedCard != card) {
-      this.selectedCard = card;
+  public void onCardSelected(Card card) {
+    notifyTurn();
+    System.err.println(this.selectedCard);
+    if (yourTurn) {
+      if (this.selectedCard != card) {
+        this.selectedCard = card;
+      }
+      else {
+        this.selectedCard = null;
+      }
     }
     else {
-      this.selectedCard = null;
+      view.showMessage("Not your turn!");
     }
     view.refresh();
+    System.err.println(this.selectedCard);
   }
 
   @Override
@@ -87,7 +105,6 @@ public class ThreeTriosPlayerController implements PlayerController {
                 this.model.currentScore(Color.BLUE));
       }
     }
-    // might need some more stuff here(?)
     this.view.refresh();
   }
 
@@ -103,9 +120,19 @@ public class ThreeTriosPlayerController implements PlayerController {
       catch (IOException e) {
         throw new IllegalArgumentException(e.getMessage());
       }
-      model.startGame(deck, shuffle, grid);
+      try {
+        model.startGame(deck, shuffle, grid);
+      }
+      catch (IllegalArgumentException | IllegalStateException e) {
+        throw new IllegalArgumentException(e.getMessage());
+      }
     }
     view.refresh();
     view.makeVisible();
+  }
+
+  @Override
+  public void notifyTurn() {
+    yourTurn = model.getCurrentPlayer().getColor().equals(player.getColor());
   }
 }

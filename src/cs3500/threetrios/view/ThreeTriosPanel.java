@@ -26,16 +26,18 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
   private boolean clickedAlready; // represents whether a cell has been clicked already
   private int index; // represents the index of a clicked card (is -1 if no card clicked)
   private boolean left; // represents which side was clicked
+  private final String panelColor;
 
   /**
    * Constructor the for panel. Takes in a ReadOnlyModel that is immutable.
    * @param model represent the ReadOnlyModel that the panel takes in
    */
-  public ThreeTriosPanel(ReadOnlyModel model) {
+  public ThreeTriosPanel(ReadOnlyModel model, String panelColor) {
     this.model = model;
     this.index = -1;
     this.clickedAlready = false;
     this.left = false;
+    this.panelColor = panelColor;
   }
 
   @Override
@@ -224,7 +226,7 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
    * Mouse listener class, this is the class that allows clicking/takes clicking into account.
    */
   class ThreeTriosMouseListener implements MouseListener {
-    private PlayerAction features; // represents the list of features of the gui
+    private final PlayerAction features; // represents the list of features of the gui
 
     /**
      * Constructor for the mouse listener class and takes in a Controller.
@@ -236,16 +238,21 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-      if (e.getX() <= 150) {
-        findCardIndex(e.getY(), "red");
-        left = true;
+      if (panelColor.equals(model.getCurrentPlayer().getColor().toString())) {
+        if (e.getX() <= 150) {
+          findCardIndex(e.getY(), "red");
+          left = true;
+        }
+        else if (e.getX() >= 200 && e.getX() <= getWidth() - 200) {
+          findGridIndex(e.getX(), e.getY());
+        }
+        else if (e.getX() >= getWidth() - 150 && e.getX() <= getWidth()) {
+          findCardIndex(e.getY(), "blue");
+          left = false;
+        }
       }
-      else if (e.getX() >= 200 && e.getX() <= getWidth() - 200) {
-        findGridIndex(e.getX(), e.getY());
-      }
-      else if (e.getX() >= getWidth() - 150 && e.getX() <= getWidth()) {
-        findCardIndex(e.getY(), "blue");
-        left = false;
+      else {
+        features.onCardSelected(null);
       }
     }
 
@@ -264,10 +271,11 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
           clickedAlready = true;
           index = -1;
         }
-        index = yClick / (getHeight() / model.getRedPlayer().size());
-        // true (red player has been selected)
-        Card card = model.getCurrentPlayer().getCardsInHand().get(index);
-        features.onCardSelected(card, true);
+        else {
+          index = yClick / (getHeight() / model.getRedPlayer().size());
+          Card card = model.getCurrentPlayer().getCardsInHand().get(index);
+          features.onCardSelected(card);
+        }
       }
       else {
         if (clickedAlready) {
@@ -280,10 +288,11 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
         else if (index != yClick / (getHeight() / model.getBluePlayer().size()) && clickedAlready) {
           clickedAlready = false;
         }
-        index = yClick / (getHeight() / model.getBluePlayer().size());
-        // false (blue player has been selected)
-        Card card = model.getCurrentPlayer().getCardsInHand().get(index);
-        features.onCardSelected(card, false);
+        else {
+          index = yClick / (getHeight() / model.getBluePlayer().size());
+          Card card = model.getCurrentPlayer().getCardsInHand().get(index);
+          features.onCardSelected(card);
+        }
       }
     }
 
@@ -294,6 +303,7 @@ public class ThreeTriosPanel extends JPanel implements ThreeTriosPanelView {
      * @param yClick represents the y coordinate of the click
      */
     private void findGridIndex(int xClick, int yClick) {
+      index = -1;
       features.placeCard(yClick / (getHeight() / model.getGrid().getNumRows()),
               ((xClick - 200) / ((getWidth() - 400) / model.getGrid().getNumCols())));
     }

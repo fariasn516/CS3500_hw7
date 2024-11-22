@@ -393,7 +393,8 @@ public class ThreeTriosModelTest {
   // when cards in hand is null
   @Test (expected = IllegalArgumentException.class)
   public void shouldThrowIllegalArgumentHandNull() {
-    Player newPlayer = new HumanPlayer(null, Color.RED);
+    List<Card> cards = null;
+    Player newPlayer = new HumanPlayer(cards, Color.RED);
   }
 
   // test the removeFromHand method

@@ -11,7 +11,7 @@ public interface PlayerAction {
    * Action to take once a card is selected.
    * @param card represents the selected card
    */
-  void onCardSelected(Card card, boolean selected);
+  void onCardSelected(Card card);
 
   /**
    *

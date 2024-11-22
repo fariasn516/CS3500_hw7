@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import cs3500.threetrios.controller.Controller;
 import cs3500.threetrios.controller.ThreeTriosSwingController;
+import cs3500.threetrios.model.Color;
 import cs3500.threetrios.view.ThreeTriosFrameView;
 import cs3500.threetrios.view.ThreeTriosModelView;
 
@@ -16,7 +17,7 @@ public class ThreeTriosControllerTest extends ThreeTriosModelTest {
 
   @Before
   public void innit() {
-    ThreeTriosFrameView view = new ThreeTriosModelView(this.hasSeededRandom);
+    ThreeTriosFrameView view = new ThreeTriosModelView(this.hasSeededRandom, Color.RED);
     this.controller = new ThreeTriosSwingController(view);
   }
 

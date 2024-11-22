@@ -34,8 +34,14 @@ public class HumanPlayer implements Player {
     this.ownedCardsOnGrid = new ArrayList<>();
   }
 
-  public HumanPlayer(Model model) {
+  /**
+   *
+   * @param model
+   * @param color
+   */
+  public HumanPlayer(Model model, Color color) {
     this.model = model;
+    this.color = color;
   }
 
   @Override
