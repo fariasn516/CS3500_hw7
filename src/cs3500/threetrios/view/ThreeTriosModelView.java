@@ -19,6 +19,7 @@ public class ThreeTriosModelView extends JFrame implements ThreeTriosFrameView {
   private final ThreeTriosPanel panel; // represents the actual images to be placed on the frame
   private final ReadOnlyModel model;
   private final Color color;
+  private boolean gameOverMessageShown = false;
 
   /**
    * Constructor for the ThreeTriosModelView. Takes in a model whose game state will be represented
@@ -62,5 +63,15 @@ public class ThreeTriosModelView extends JFrame implements ThreeTriosFrameView {
       JOptionPane.showMessageDialog(
               this, message, "Alert", JOptionPane.ERROR_MESSAGE);
     }
+  }
+
+  @Override
+  public boolean isGameOverMessageShown() {
+    return gameOverMessageShown;
+  }
+
+  @Override
+  public void setGameOverMessageShown(boolean shown) {
+    this.gameOverMessageShown = shown;
   }
 }

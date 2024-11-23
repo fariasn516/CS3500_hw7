@@ -29,4 +29,17 @@ public interface ThreeTriosFrameView {
    * @param message
    */
   void showMessage(String message);
+
+  /**
+   *
+   * @return
+   */
+
+  boolean isGameOverMessageShown();
+
+  /**
+   *
+   * @param shown
+   */
+ void setGameOverMessageShown(boolean shown);
 }
