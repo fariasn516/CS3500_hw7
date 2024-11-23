@@ -118,6 +118,7 @@ public class ThreeTriosPlayerController implements PlayerController {
     if (this.yourTurn && this.player instanceof AIPlayer) {
       this.player.takeTurn();
     }
+
   }
 
   @Override
