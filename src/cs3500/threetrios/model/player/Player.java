@@ -11,7 +11,7 @@ import cs3500.threetrios.view.PlayerAction;
  */
 public interface Player {
   /**
-   *
+   * Takes the turn
    */
   void takeTurn();
 
@@ -34,6 +34,17 @@ public interface Player {
    */
   void addToOwnership(Card cards);
 
+  /**
+   * Adds the given card to this player's hand.
+   * @param card represents the card to be added to this player's hand.
+   */
+  void addToHand(Card card);
+
+  /**
+   * Makes the listener of this Player equal to the given listener.
+   */
+  void addListener(PlayerAction listener);
+
   // Below are OBSERVATIONS
   /**
    * Returns the cards that are in the player's hand. NON-MUTABLE!!!
@@ -49,26 +60,13 @@ public interface Player {
 
   /**
    * Returns the player's color.
-   *
    * @return the color of the player.
    */
   Color getColor();
 
   /**
    * Returns a non-mutable list of cards owned by the player on grid.
-   *
    * @return a list of cards representing the player's ownership on grid.
    */
   List<Card> getOwnedCardsOnGrid();
-
-  /**
-   *
-   * @param card
-   */
-  void addToHand(Card card);
-
-  /**
-   *
-   */
-  void addListener(PlayerAction listener);
 }

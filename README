@@ -108,3 +108,12 @@ Changes Made in Part 2:
             -ThreeTriosPanelView (interface): Defines the structure for the game’s panel view.
             -ThreeTriosModelView (class): Implements ThreeTriosFrameView, managing the frame-level display for the game.
             -ThreeTriosPanel (class): Implements ThreeTriosPanelView, managing the panel-level display for the game.
+
+Changes Made in Part 3:
+    New Classes and Interfaces
+    -View Package (cs3500.threetrios.view)
+        -PlayerAction (interface)
+    -Model Package (cs3500.threetrios.model)
+        -ModelStatus (interface)
+    -Controller Package (cs3500.threetrios.controller)
+        -PlayerController (interface)

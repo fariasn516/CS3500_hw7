@@ -11,8 +11,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import cs3500.threetrios.controller.Controller;
-import cs3500.threetrios.controller.PlayerController;
 import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Cell;
 import cs3500.threetrios.model.Direction;

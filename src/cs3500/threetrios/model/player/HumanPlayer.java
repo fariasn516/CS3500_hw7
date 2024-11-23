@@ -34,9 +34,9 @@ public class HumanPlayer implements Player {
   }
 
   /**
-   *
-   * @param model
-   * @param color
+   * Constructor that takes in a model to be played with and color representing this player.
+   * @param model represents the model to be played with
+   * @param color represents the color of this player
    */
   public HumanPlayer(Model model, Color color) {
     this.color = color;
