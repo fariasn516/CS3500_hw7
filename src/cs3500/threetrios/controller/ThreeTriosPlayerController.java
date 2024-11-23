@@ -54,6 +54,7 @@ public class ThreeTriosPlayerController implements PlayerController {
 
   @Override
   public void placeCard (int row, int col) {
+    checkTurn();
     if (yourTurn) {
       if (this.selectedCard != null) {
         try {
@@ -74,9 +75,13 @@ public class ThreeTriosPlayerController implements PlayerController {
     this.turnOver = false;
     this.view.refresh();
   }
+  private void checkTurn() {
+    this.yourTurn = this.player.getColor().equals(this.model.getCurrentPlayer().getColor());
+  }
 
   @Override
   public void onCardSelected(Card card) {
+    checkTurn();
     if (yourTurn) {
       if (this.selectedCard != card) {
         this.selectedCard = card;
@@ -137,6 +142,10 @@ public class ThreeTriosPlayerController implements PlayerController {
       catch (IllegalArgumentException | IllegalStateException e) {
         throw new IllegalArgumentException(e.getMessage());
       }
+    }
+    if (this.player instanceof AIPlayer
+            && this.player.getColor().equals(this.model.getCurrentPlayer().getColor())) {
+      this.player.takeTurn();
     }
     view.refresh();
     view.makeVisible();
