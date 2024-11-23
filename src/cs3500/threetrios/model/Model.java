@@ -53,5 +53,9 @@ public interface Model extends ReadOnlyModel {
    */
   void takeTurn(Card card, int row, int col);
 
+  /**
+   * Adds the give listener to the list of listeners in the model.
+   * @param listener adds the given listener.
+   */
   void addListener(ModelStatus listener);
 }

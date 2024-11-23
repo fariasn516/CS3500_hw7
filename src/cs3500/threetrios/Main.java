@@ -46,11 +46,6 @@ public class Main {
     PlayerController controller2 = new ThreeTriosPlayerController(model, player2, viewPlayer2);
     controller2.startGame("configurationFiles/GridConfiguration/HasHoles",
             "configurationFiles/CardConfiguration/MaxCards", false);
-
-    while (!model.isGameOver()) {
-      viewPlayer1.refresh();
-      viewPlayer2.refresh();
-    }
   }
 
 }

@@ -1,9 +1,5 @@
 package cs3500.threetrios.view;
 
-import cs3500.threetrios.controller.Controller;
-import cs3500.threetrios.controller.PlayerController;
-import cs3500.threetrios.model.player.Player;
-
 /**
  * Represents the frame of the gui graphics, this is where all the actual graphics of the game will
  * be put onto.
@@ -15,7 +11,8 @@ public interface ThreeTriosFrameView {
   void refresh();
 
   /**
-   * Helps with handling of clicking onto the GUI.
+   * Helps with handling of clicking on GUI.
+   * @param listener represents the listener to be added
    */
   void addClickListener(PlayerAction listener);
 
@@ -25,21 +22,20 @@ public interface ThreeTriosFrameView {
   void makeVisible();
 
   /**
-   *
-   * @param message
+   * Shows a dialogue message given the String message.
+   * @param message represents the message to be printed out
    */
   void showMessage(String message);
 
   /**
-   *
-   * @return
+   * Determines whether the game over message is shown.
+   * @return boolean that represents whether the game over message should be/has been shown
    */
-
   boolean isGameOverMessageShown();
 
   /**
    *
    * @param shown
    */
- void setGameOverMessageShown(boolean shown);
+  void setGameOverMessageShown(boolean shown);
 }

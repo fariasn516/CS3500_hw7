@@ -14,9 +14,9 @@ public interface PlayerAction {
   void onCardSelected(Card card);
 
   /**
-   *
-   * @param row
-   * @param col
+   * Places a card given the row and column.
+   * @param row represents the row for the card to be placed on (indexing starts at 0)
+   * @param col represents the column for the card to be placed on (indexing starts at 0)
    */
   void placeCard(int row, int col);
 }

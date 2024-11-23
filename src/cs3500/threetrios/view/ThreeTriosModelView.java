@@ -1,15 +1,10 @@
 package cs3500.threetrios.view;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
-import cs3500.threetrios.controller.Controller;
-import cs3500.threetrios.controller.PlayerController;
 import cs3500.threetrios.model.Color;
 import cs3500.threetrios.model.ReadOnlyModel;
-import cs3500.threetrios.model.ThreeTriosModel;
-import cs3500.threetrios.model.player.Player;
-
-import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * The frame of the Three Trios game. This is the general frame and graphics will be placed on it
@@ -17,18 +12,18 @@ import static javax.swing.JOptionPane.showMessageDialog;
  */
 public class ThreeTriosModelView extends JFrame implements ThreeTriosFrameView {
   private final ThreeTriosPanel panel; // represents the actual images to be placed on the frame
-  private final ReadOnlyModel model;
-  private final Color color;
-  private boolean gameOverMessageShown = false;
+  private final ReadOnlyModel model; // represents the model that this view is printing
+  private final Color color; // represents color of this frame
+  private boolean gameOverMessageShown = false; // represents if the game over message is shown
 
   /**
    * Constructor for the ThreeTriosModelView. Takes in a model whose game state will be represented
    * through the graphics.
    * @param model represents the model whose game state is to be represented through the GUI
+   * @param color represents the color of this frame
    */
   public ThreeTriosModelView(ReadOnlyModel model, Color color) {
     this.panel = new ThreeTriosPanel(model, color.toString());
-    // represents the model whose game state is to be represented
     this.setSize(1000, 1000);
     this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     this.add(panel);

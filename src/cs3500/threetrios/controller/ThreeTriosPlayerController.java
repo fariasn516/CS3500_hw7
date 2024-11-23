@@ -15,21 +15,20 @@ import cs3500.threetrios.view.ThreeTriosFrameView;
 import cs3500.threetrios.view.ThreeTriosModelView;
 
 /**
- *
+ * Controller that takes in the user's clicks from the GUI and feeds the action to the model.
  */
 public class ThreeTriosPlayerController implements PlayerController {
   Model model; // represents the model where all the rules of ThreeTrios is being run
   Player player; // represents the player that is playing the game
-  ThreeTriosModelView view; // represents the view that shows the game state as a GUI
+  ThreeTriosFrameView view; // represents the view that shows the game state as a GUI
   Card selectedCard; // represents the card that is currently selected
   boolean yourTurn; // represents whether it is this player's turn
-  boolean turnOver;
 
   /**
-   *
-   * @param model
-   * @param player
-   * @param view
+   * Constructor for the controller, takes in the model, player, and view.
+   * @param model represents the model that the game is being played with
+   * @param player represents the player this controller is acting for
+   * @param view represents the GUI view for this player
    */
   public ThreeTriosPlayerController(Model model, Player player, ThreeTriosModelView view) {
     if (model == null) {
@@ -50,7 +49,6 @@ public class ThreeTriosPlayerController implements PlayerController {
     this.player.addListener(this);
 
     this.yourTurn = this.player.getColor().equals(Color.RED);
-    this.turnOver = false;
   }
 
   @Override
@@ -59,7 +57,6 @@ public class ThreeTriosPlayerController implements PlayerController {
     if (yourTurn) {
       if (this.selectedCard != null) {
         try {
-          System.err.println(this.selectedCard + " " + row + " " + col);
           this.model.takeTurn(this.selectedCard, row, col);
           this.selectedCard = null;
         }
@@ -68,14 +65,17 @@ public class ThreeTriosPlayerController implements PlayerController {
           this.selectedCard = null;
         }
       }
+      else {
+        this.view.showMessage("Please choose a card first!");
+      }
       notifyStatus();
     }
     else {
       view.showMessage("Not your turn!");
     }
-    this.turnOver = false;
     this.view.refresh();
   }
+
   private void checkTurn() {
     this.yourTurn = this.player.getColor().equals(this.model.getCurrentPlayer().getColor());
   }
@@ -95,11 +95,11 @@ public class ThreeTriosPlayerController implements PlayerController {
       view.showMessage("Not your turn!");
     }
     view.refresh();
-    System.err.println(this.selectedCard);
   }
 
   @Override
   public void notifyStatus() {
+    this.view.refresh();
     yourTurn = model.getCurrentPlayer().getColor().equals(player.getColor());
 
     if (this.model.isGameOver()) {
@@ -124,6 +124,7 @@ public class ThreeTriosPlayerController implements PlayerController {
     if (this.yourTurn && this.player instanceof AIPlayer) {
       this.player.takeTurn();
     }
+
   }
 
   @Override

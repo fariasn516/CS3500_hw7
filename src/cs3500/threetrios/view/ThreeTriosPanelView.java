@@ -1,7 +1,5 @@
 package cs3500.threetrios.view;
 
-import cs3500.threetrios.controller.Controller;
-
 /**
  * Interface for the panels; the panels are how the state of the model are to be represented in
  * GUI form.

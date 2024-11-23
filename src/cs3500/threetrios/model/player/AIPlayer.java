@@ -12,7 +12,7 @@ import cs3500.threetrios.view.PlayerAction;
 
 /**
  * This class represents an AI player for the game ThreeTrios, things are played based on
- *
+ * a given strategy.
  */
 public class AIPlayer implements Player {
   private final List<Card> cardsInHand; // represents the cards in the hand
@@ -22,6 +22,13 @@ public class AIPlayer implements Player {
   private final GameStrategy strat; // represents the strategy(ies) to be used
   private PlayerAction features; // represents the observer that notifies the turn
 
+  /**
+   * Constructor for the AI player, takes in a model to be played with, a color representing the
+   * AI's color, and a GameStrategy that determines this AI player's behavior when placing cards.
+   * @param model represents the model to be played with
+   * @param color represents the color this player has
+   * @param strat represents the strategy this AI player is going to be using
+   */
   public AIPlayer(Model model, Color color, GameStrategy strat) {
     this.model = model;
     this.color = color;
