@@ -98,20 +98,22 @@ public class ThreeTriosPlayerController implements PlayerController {
     if (this.model.isGameOver()) {
       if (this.model.winner().equals("Tie")) {
         this.view.showMessage("This game is a tie!");
+        return;
       }
       else {
         if (this.model.winner().equals("Red Player")) {
           this.view.showMessage(this.model.winner() + " has won!\n" + "Score: " +
                   this.model.currentScore(Color.RED));
+          return;
         }
         this.view.showMessage(this.model.winner() + " has won!\n" + "Score: " +
                 this.model.currentScore(Color.BLUE));
+        return;
       }
     }
     if (this.yourTurn && this.player instanceof AIPlayer) {
       this.player.takeTurn();
     }
-    this.view.refresh();
   }
 
   @Override
