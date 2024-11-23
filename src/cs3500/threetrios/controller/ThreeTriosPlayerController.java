@@ -12,6 +12,7 @@ import cs3500.threetrios.model.Model;
 import cs3500.threetrios.model.player.AIPlayer;
 import cs3500.threetrios.model.player.Player;
 import cs3500.threetrios.view.ThreeTriosFrameView;
+import cs3500.threetrios.view.ThreeTriosModelView;
 
 /**
  *
@@ -19,7 +20,7 @@ import cs3500.threetrios.view.ThreeTriosFrameView;
 public class ThreeTriosPlayerController implements PlayerController {
   Model model; // represents the model where all the rules of ThreeTrios is being run
   Player player; // represents the player that is playing the game
-  ThreeTriosFrameView view; // represents the view that shows the game state as a GUI
+  ThreeTriosModelView view; // represents the view that shows the game state as a GUI
   Card selectedCard; // represents the card that is currently selected
   boolean yourTurn; // represents whether it is this player's turn
 
@@ -29,7 +30,7 @@ public class ThreeTriosPlayerController implements PlayerController {
    * @param player
    * @param view
    */
-  public ThreeTriosPlayerController(Model model, Player player, ThreeTriosFrameView view) {
+  public ThreeTriosPlayerController(Model model, Player player, ThreeTriosModelView view) {
     if (model == null) {
       throw new IllegalArgumentException("Model cannot be null.");
     }
@@ -99,22 +100,26 @@ public class ThreeTriosPlayerController implements PlayerController {
   public void notifyStatus() {
     this.view.refresh();
     yourTurn = model.getCurrentPlayer().getColor().equals(player.getColor());
+
     if (this.model.isGameOver()) {
       if (this.model.winner().equals("Tie")) {
-        this.view.showMessage("This game is a tie!");
+        if (!this.view.isGameOverMessageShown()) {
+          this.view.showMessage("This game is a tie!");
+          this.view.setGameOverMessageShown(true);
+        }
         return;
       }
       else {
-        if (this.model.winner().equals("Red Player")) {
-          this.view.showMessage(this.model.winner() + " has won!\n" + "Score: " +
-                  this.model.currentScore(Color.RED));
-          return;
+        String winnerMessage = this.model.winner() + " has won!\n" + "Score: " +
+                this.model.currentScore(this.model.winner().equals("Red Player") ? Color.RED : Color.BLUE);
+        if (!this.view.isGameOverMessageShown()) {
+          this.view.showMessage(winnerMessage);
+          this.view.setGameOverMessageShown(true);
         }
-        this.view.showMessage(this.model.winner() + " has won!\n" + "Score: " +
-                this.model.currentScore(Color.BLUE));
         return;
       }
     }
+
     if (this.yourTurn && this.player instanceof AIPlayer) {
       this.player.takeTurn();
     }
