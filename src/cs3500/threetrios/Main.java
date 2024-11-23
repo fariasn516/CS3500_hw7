@@ -1,28 +1,15 @@
 package cs3500.threetrios;
 
-import java.io.InputStreamReader;
-import java.util.List;
-
-import cs3500.threetrios.controller.Controller;
 import cs3500.threetrios.controller.PlayerController;
 import cs3500.threetrios.controller.ThreeTriosPlayerController;
-import cs3500.threetrios.controller.ThreeTriosSwingController;
-import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Color;
-import cs3500.threetrios.model.GameGrid;
-import cs3500.threetrios.model.Grid;
 import cs3500.threetrios.model.Model;
-import cs3500.threetrios.model.SimpleCard;
 import cs3500.threetrios.model.ThreeTriosModel;
-import cs3500.threetrios.model.Value;
 import cs3500.threetrios.model.player.AIPlayer;
 import cs3500.threetrios.model.player.HumanPlayer;
 import cs3500.threetrios.model.player.Player;
 import cs3500.threetrios.strategy.CornerCardStrat;
-import cs3500.threetrios.strategy.GameStrategy;
 import cs3500.threetrios.strategy.MaxFlippedCardsStrat;
-import cs3500.threetrios.view.PlayerAction;
-import cs3500.threetrios.view.ThreeTriosFrameView;
 import cs3500.threetrios.view.ThreeTriosModelView;
 
 /**
@@ -53,7 +40,8 @@ public class Main {
     } else if (args[0].equalsIgnoreCase("strategy2")) {
       player1 = new AIPlayer(model, Color.RED, new CornerCardStrat());
     } else {
-      throw new IllegalArgumentException("Invalid player type for player 1. Use 'human' or 'strategyX'.");
+      throw new IllegalArgumentException("Invalid player type for player 1. " +
+              "Use 'human' or 'strategyX'.");
     }
 
     if (args[1].equalsIgnoreCase("human")) {
@@ -63,7 +51,8 @@ public class Main {
     } else if (args[1].equalsIgnoreCase("strategy2")) {
       player2 = new AIPlayer(model, Color.BLUE, new CornerCardStrat());
     } else {
-      throw new IllegalArgumentException("Invalid player type for player 2. Use 'human' or 'strategyX'.");
+      throw new IllegalArgumentException("Invalid player type for player 2. " +
+              "Use 'human' or 'strategyX'.");
     }
     
     PlayerController controller1 = new ThreeTriosPlayerController(model, player1, viewPlayer1);

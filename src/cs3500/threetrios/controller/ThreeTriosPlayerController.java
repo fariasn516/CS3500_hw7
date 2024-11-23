@@ -52,7 +52,7 @@ public class ThreeTriosPlayerController implements PlayerController {
   }
 
   @Override
-  public void placeCard (int row, int col) {
+  public void placeCard(int row, int col) {
     checkTurn();
     if (yourTurn) {
       if (this.selectedCard != null) {
@@ -112,7 +112,8 @@ public class ThreeTriosPlayerController implements PlayerController {
       }
       else {
         String winnerMessage = this.model.winner() + " has won!\n" + "Score: " +
-                this.model.currentScore(this.model.winner().equals("Red Player") ? Color.RED : Color.BLUE);
+                this.model.currentScore(this.model.winner().equals("Red Player") ?
+                        Color.RED : Color.BLUE);
         if (!this.view.isGameOverMessageShown()) {
           this.view.showMessage(winnerMessage);
           this.view.setGameOverMessageShown(true);

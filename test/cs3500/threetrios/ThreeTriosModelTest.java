@@ -27,11 +27,8 @@ import cs3500.threetrios.model.ThreeTriosModel;
 import cs3500.threetrios.model.Value;
 import cs3500.threetrios.strategy.CornerCardStrat;
 import cs3500.threetrios.strategy.GameStrategy;
-import cs3500.threetrios.strategy.MaxFlippedCardsStrat;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -1243,8 +1240,7 @@ public class ThreeTriosModelTest {
     // Run the AI's turn
     testAIPlayer.addToHand(this.rabbitCard);
     testAIPlayer.addToHand(this.oxCard);
-
-   //  testAIPlayer.takeTurn();
+    // testAIPlayer.takeTurn();
     assertEquals(2, testAIPlayer.getCardsInHand().size());
     // assertEquals(testAIPlayer, this.hasSeededRandom.getOwnerAtCell(0, 0));
   }

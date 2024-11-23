@@ -11,6 +11,9 @@ import cs3500.threetrios.model.ModelStatus;
 import cs3500.threetrios.model.ReadOnlyModel;
 import cs3500.threetrios.model.player.Player;
 
+/**
+ * Mock model representation of three trios model.
+ */
 public class ThreeTriosMockModel implements Model, ReadOnlyModel, ModelStatus {
   // track method calls
   private boolean startGameCalled = false;
@@ -51,10 +54,13 @@ public class ThreeTriosMockModel implements Model, ReadOnlyModel, ModelStatus {
 
   @Override
   public void addListener(ModelStatus listener) {
+    // left empty
   }
 
   @Override
   public void notifyStatus() {
+    // left empty
+
   }
 
   @Override

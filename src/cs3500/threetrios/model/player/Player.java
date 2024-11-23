@@ -11,7 +11,7 @@ import cs3500.threetrios.view.PlayerAction;
  */
 public interface Player {
   /**
-   * Takes the turn
+   * Takes the turn.
    */
   void takeTurn();
 

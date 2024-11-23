@@ -2,23 +2,12 @@ package cs3500.threetrios;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import cs3500.threetrios.controller.Controller;
-import cs3500.threetrios.controller.PlayerController;
-import cs3500.threetrios.controller.ThreeTriosPlayerController;
 import cs3500.threetrios.controller.ThreeTriosSwingController;
-import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.Color;
-import cs3500.threetrios.model.SimpleCard;
-import cs3500.threetrios.model.Value;
-import cs3500.threetrios.model.player.HumanPlayer;
-import cs3500.threetrios.model.player.Player;
 import cs3500.threetrios.view.ThreeTriosFrameView;
 import cs3500.threetrios.view.ThreeTriosModelView;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for the controller.
