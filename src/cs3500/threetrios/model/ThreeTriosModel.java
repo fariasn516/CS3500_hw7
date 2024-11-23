@@ -1,13 +1,14 @@
 package cs3500.threetrios.model;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+
 import cs3500.threetrios.model.player.HumanPlayer;
 import cs3500.threetrios.model.player.Player;
+
 
 /**
  * The model class for the game Three Trios, this is where all the rules of gameplay is handled.
@@ -22,8 +23,10 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
   private final Random rand; // helps with shuffling of the cards if needed
   private final List<ModelStatus> listeners; // represents the listeners for the model
 
+
   // INVARIANT: The number of card cells on the grid is always one less than the total amount of
   // cards that are being played with.
+
 
   /**
    * Constructor for the model, does not take in anything.
@@ -32,6 +35,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     this.rand = new Random();
     this.listeners = new ArrayList<>();
   }
+
 
   /**
    * Constructor for the model and takes in a random.
@@ -45,6 +49,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     this.rand = rand;
     this.listeners = new ArrayList<>();
   }
+
 
   @Override
   public <C extends Card> void startGame(List<C> cards, boolean shuffle, Grid grid) {
@@ -61,6 +66,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
       throw new IllegalArgumentException("Card count must be one more than card cell count.");
     }
 
+
     if (shuffle) {
       cards = new ArrayList<>(cards);
       Collections.shuffle(cards, this.rand);
@@ -70,6 +76,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     this.dealCards(cards);
     this.currentPlayer = redPlayer;
   }
+
 
   /**
    * Makes sure that all the cards have a unique identifier.
@@ -88,6 +95,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     return false;
   }
 
+
   /**
    * Determines if the number of cards adheres to the game's rules (ie one more than the number of
    * card cells in the grid).
@@ -98,6 +106,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
   private <C extends Card> boolean invalidCardCount(List<C> cards, Grid grid) {
     return cards.size() != grid.getCardCellCount() + 1;
   }
+
 
   /**
    * Deals the cards to the two players and creates the two players.
@@ -116,9 +125,11 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
       }
     }
 
+
     this.redPlayer = new HumanPlayer(redHand, Color.RED);
     this.bluePlayer = new HumanPlayer(blueHand, Color.BLUE);
   }
+
 
   @Override
   public void placingPhase(Card card, int row, int col) {
@@ -131,33 +142,70 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     grid.placeCard(card, row, col);
   }
 
+
   @Override
   public void battlingPhase(int row, int col) {
     checkGameState();
 
+
     Card placedCard = grid.getCard(row, col);
+    floodFillFlip(row, col, placedCard, currentPlayer.getColor());
+  }
+
+
+  private void floodFillFlip(int row, int col, Card sourceCard, Color sourceColor) {
     Map<String, Direction> adjacentCards = grid.getAdjacentCardsWithDirections(row, col);
 
+
     for (Map.Entry<String, Direction> entry : adjacentCards.entrySet()) {
-      Card adjCard = findCardByName(entry.getKey());
       Direction direction = entry.getValue();
       Direction oppositeDirection = getOppositeDirection(direction);
 
-      Color ownerColor = getCardOwnerColor(adjCard);
-      if (ownerColor != null && ownerColor != currentPlayer.getColor()) {
-        if (placedCard.getValueFromDirection(direction)
-                > adjCard.getValueFromDirection(oppositeDirection)) {
-          if (currentPlayer.getColor() == Color.BLUE) {
-            bluePlayer.addToOwnership(adjCard);
-            redPlayer.removeFromOwnership(adjCard);
-          } else {
-            redPlayer.addToOwnership(adjCard);
-            bluePlayer.removeFromOwnership(adjCard);
-          }
+
+      int[] adjPosition = getAdjacentPosition(row, col, direction);
+      int adjRow = adjPosition[0];
+      int adjCol = adjPosition[1];
+
+
+      Card adjCard = grid.getCard(adjRow, adjCol);
+      if (adjCard == null) continue;
+
+
+      Color adjCardColor = getCardOwnerColor(adjCard);
+      if (adjCardColor != null && adjCardColor != sourceColor) {
+        if (sourceCard.getValueFromDirection(direction) >
+                adjCard.getValueFromDirection(oppositeDirection)) {
+
+
+          flipCard(adjCard, adjRow, adjCol, sourceColor);
+          floodFillFlip(adjRow, adjCol, adjCard, sourceColor);
         }
       }
     }
   }
+
+
+  private void flipCard(Card card, int row, int col, Color newOwner) {
+    if (newOwner == Color.BLUE) {
+      bluePlayer.addToOwnership(card);
+      redPlayer.removeFromOwnership(card);
+    } else {
+      redPlayer.addToOwnership(card);
+      bluePlayer.removeFromOwnership(card);
+    }
+  }
+
+
+  private int[] getAdjacentPosition(int row, int col, Direction direction) {
+    switch (direction) {
+      case NORTH: return new int[]{row - 1, col};
+      case SOUTH: return new int[]{row + 1, col};
+      case EAST: return new int[]{row, col + 1};
+      case WEST: return new int[]{row, col - 1};
+      default: return new int[]{row, col};
+    }
+  }
+
 
   /**
    * Returns the card based on the name given.
@@ -168,9 +216,11 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
   private Card findCardByName(String name) {
     Cell[][] cells = grid.getCells();
 
+
     for (int row = 0; row < grid.getNumRows(); row++) {
       for (int col = 0; col < grid.getNumCols(); col++) {
         Cell cell = cells[row][col];
+
 
         if (!cell.isHole() && cell.hasCard()) {
           Card card = cell.getCard();
@@ -182,6 +232,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     }
     throw new IllegalArgumentException("Card not found in grid: " + name);
   }
+
 
   /**
    * Returns the opposite direction given the direction.
@@ -203,6 +254,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     }
   }
 
+
   @Override
   public void takeTurn(Card card, int row, int col) {
     checkGameState();
@@ -210,16 +262,21 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
       throw new IllegalArgumentException("Card does not belong to current player.");
     }
 
+
     placingPhase(card, row, col);
 
+
     battlingPhase(row, col);
+
 
     if (!isGameOver()) {
       currentPlayer = (currentPlayer == bluePlayer) ? redPlayer : bluePlayer;
     }
 
+
     notifyStatus();
   }
+
 
   @Override
   public boolean isGameOver() {
@@ -229,6 +286,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     gameEnded = allCardCellsFilled();
     return gameEnded;
   }
+
 
   /**
    * Determines if all the card cells on the grid has been filled.
@@ -245,6 +303,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     return true;
   }
 
+
   @Override
   public String winner() {
     if (!this.started) {
@@ -254,8 +313,10 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
       throw new IllegalStateException("Game has not ended!");
     }
 
+
     int blueScore = currentScore(Color.BLUE);
     int redScore = currentScore(Color.RED);
+
 
     if (blueScore > redScore) {
       return "Blue Player";
@@ -268,6 +329,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     }
   }
 
+
   @Override
   public Grid getGrid() {
     Grid newGrid;
@@ -275,15 +337,18 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     return newGrid;
   }
 
+
   @Override
   public Player getCurrentPlayer() {
     return new HumanPlayer(this.currentPlayer.getCardsInHand(), this.currentPlayer.getColor());
   }
 
+
   @Override
   public boolean hasStarted() {
     return started;
   }
+
 
   @Override
   public Color getCardOwnerColor(Card card) {
@@ -299,6 +364,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     }
   }
 
+
   /**
    *
    */
@@ -311,6 +377,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     }
   }
 
+
   @Override
   public Player getOwnerAtCell(int row, int col) {
     if (!started) {
@@ -321,6 +388,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
       throw new IllegalArgumentException("This cell is a hole or there is no card placed.");
     }
 
+
     if (redPlayer.getOwnedCardsOnGrid().contains(card)) {
       return redPlayer;
     }
@@ -328,6 +396,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
       return bluePlayer;
     }
   }
+
 
   @Override
   public boolean isLegalToPlay(int row, int col) {
@@ -340,6 +409,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     Cell cell = grid.getCells()[row][col];
     return !cell.isHole() && !cell.hasCard();
   }
+
 
   @Override
   public int howManyWillFlip(Card card, int row, int col) {
@@ -357,18 +427,23 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
       throw new IllegalArgumentException("This cell has a card; no cards can be played here.");
     }
 
+
     int flipCount = 0;
     Map<String, Direction> adjacentCards = grid.getAdjacentCardsWithDirections(row, col);
+
 
     for (Map.Entry<String, Direction> entry : adjacentCards.entrySet()) {
       String adjCardName = entry.getKey();
       Direction direction = entry.getValue();
       Direction oppositeDirection = getOppositeDirection(direction);
 
+
       Card adjCard = findCardByName(adjCardName);
+
 
       Color adjCardOwnerColor = getCardOwnerColor(adjCard);
       Color currentPlayerColor = currentPlayer.getColor();
+
 
       if (adjCardOwnerColor != null && adjCardOwnerColor != currentPlayerColor) {
         if (card.getValueFromDirection(direction)
@@ -378,8 +453,10 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
       }
     }
 
+
     return flipCount;
   }
+
 
   @Override
   public int currentScore(Color color) {
@@ -395,6 +472,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     return redPlayer.getNumberCardsOwned();
   }
 
+
   @Override
   public List<Card> getBluePlayer() {
     if (!this.started) {
@@ -402,6 +480,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     }
     return new ArrayList<>(this.bluePlayer.getCardsInHand());
   }
+
 
   @Override
   public List<Card> getRedPlayer() {
@@ -411,10 +490,12 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
     return new ArrayList<>(this.redPlayer.getCardsInHand());
   }
 
+
   @Override
   public void addListener(ModelStatus listener) {
     this.listeners.add(listener);
   }
+
 
   @Override
   public void notifyStatus() {
