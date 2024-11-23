@@ -37,8 +37,8 @@ public class Main {
     Model model = new ThreeTriosModel();
     ThreeTriosModelView viewPlayer1 = new ThreeTriosModelView(model, Color.RED);
     ThreeTriosModelView viewPlayer2 = new ThreeTriosModelView(model, Color.BLUE);
-    Player player1 = new AIPlayer(model, Color.RED, new CornerCardStrat());
-    // Player player1 = new HumanPlayer(model, Color.BLUE);
+    // Player player1 = new AIPlayer(model, Color.RED, new CornerCardStrat());
+    Player player1 = new HumanPlayer(model, Color.RED);
     Player player2 = new AIPlayer(model, Color.BLUE, new MaxFlippedCardsStrat());
     PlayerController controller1 = new ThreeTriosPlayerController(model, player1, viewPlayer1);
     controller1.startGame("configurationFiles/GridConfiguration/HasHoles",

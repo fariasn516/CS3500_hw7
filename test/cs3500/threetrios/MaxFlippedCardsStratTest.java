@@ -4,13 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import cs3500.threetrios.model.Card;
 import cs3500.threetrios.model.SimpleCard;
 import cs3500.threetrios.model.Value;
 import cs3500.threetrios.strategy.GameMove;
 import cs3500.threetrios.strategy.MaxFlippedCardsStrat;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
