@@ -18,12 +18,21 @@ import cs3500.threetrios.model.GameCell;
 import cs3500.threetrios.model.GameGrid;
 import cs3500.threetrios.model.Grid;
 import cs3500.threetrios.model.GridFileParser;
+import cs3500.threetrios.model.player.AIPlayer;
 import cs3500.threetrios.model.player.HumanPlayer;
 import cs3500.threetrios.model.Model;
 import cs3500.threetrios.model.player.Player;
 import cs3500.threetrios.model.SimpleCard;
 import cs3500.threetrios.model.ThreeTriosModel;
 import cs3500.threetrios.model.Value;
+import cs3500.threetrios.strategy.CornerCardStrat;
+import cs3500.threetrios.strategy.GameStrategy;
+import cs3500.threetrios.strategy.MaxFlippedCardsStrat;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Class that contains all testing that has to do with the model.
@@ -36,6 +45,10 @@ public class ThreeTriosModelTest {
   // some players
   protected Player redHumanPlayer;
   protected Player blueHumanPlayer;
+
+  // AI player
+  protected Player testAIPlayer;
+  protected GameStrategy gameStrat;
 
   protected GameCell cellWithHole;
   protected GameCell cellWithoutHole;
@@ -89,6 +102,11 @@ public class ThreeTriosModelTest {
     this.redHumanPlayer = new HumanPlayer(List.of(), Color.RED);
     this.blueHumanPlayer = new HumanPlayer(List.of(), Color.BLUE);
 
+    // AI player
+    this.gameStrat = new CornerCardStrat();
+    this.testAIPlayer = new AIPlayer(hasSeededRandom, Color.RED, gameStrat);
+
+
     // initializing grids
     boolean[][] noHolesLayout = {
             {false, false, false},
@@ -119,9 +137,9 @@ public class ThreeTriosModelTest {
   @Test
   public void testStartGameWithSeededRandom() {
     hasSeededRandom.startGame(deck, true, gridWithNoHoles);
-    Assert.assertTrue(hasSeededRandom.hasStarted());
-    Assert.assertEquals(hasSeededRandom.getGrid(), this.gridWithNoHoles);
-    Assert.assertEquals(redHumanPlayer.getColor(), hasSeededRandom.getCurrentPlayer().getColor());
+    assertTrue(hasSeededRandom.hasStarted());
+    assertEquals(hasSeededRandom.getGrid(), this.gridWithNoHoles);
+    assertEquals(redHumanPlayer.getColor(), hasSeededRandom.getCurrentPlayer().getColor());
   }
 
   // when the deck size is incorrect
@@ -184,8 +202,8 @@ public class ThreeTriosModelTest {
   public void testPlacingPhase() {
     hasSeededRandom.startGame(deck, true, gridWithNoHoles);
     hasSeededRandom.placingPhase(oxCard, 0, 0);
-    Assert.assertTrue(hasSeededRandom.getGrid().getCells()[0][0].hasCard());
-    Assert.assertEquals(oxCard, hasSeededRandom.getGrid().getCard(0, 0));
+    assertTrue(hasSeededRandom.getGrid().getCells()[0][0].hasCard());
+    assertEquals(oxCard, hasSeededRandom.getGrid().getCard(0, 0));
   }
 
   // places a card when the card already exists in the same spot
@@ -237,7 +255,7 @@ public class ThreeTriosModelTest {
     hasSeededRandom.placingPhase(rabbitCard, 0, 0);
     hasSeededRandom.battlingPhase(0, 0);
 
-    Assert.assertEquals(Color.RED,
+    assertEquals(Color.RED,
             hasSeededRandom.getCardOwnerColor(hasSeededRandom.getGrid().getCard(0, 0)));
   }
 
@@ -288,7 +306,7 @@ public class ThreeTriosModelTest {
     hasSeededRandom.placingPhase(dogCard, 0, 1);
     hasSeededRandom.battlingPhase(0, 0);
     Color expectedOwnerColor = hasSeededRandom.getCurrentPlayer().getColor();
-    Assert.assertEquals(expectedOwnerColor, hasSeededRandom.getCardOwnerColor(dogCard));
+    assertEquals(expectedOwnerColor, hasSeededRandom.getCardOwnerColor(dogCard));
   }
 
   // test isGameOver method
@@ -302,7 +320,7 @@ public class ThreeTriosModelTest {
   @Test
   public void testIsGameOver() {
     hasSeededRandom.startGame(deck, true, gridWithNoHoles);
-    Assert.assertFalse(hasSeededRandom.isGameOver());
+    assertFalse(hasSeededRandom.isGameOver());
 
     hasSeededRandom.takeTurn(oxCard, 0, 1);
     hasSeededRandom.takeTurn(ratCard, 0, 0);
@@ -314,7 +332,7 @@ public class ThreeTriosModelTest {
     hasSeededRandom.takeTurn(goatCard, 2, 0);
     hasSeededRandom.takeTurn(rabbitCard, 2, 2);
 
-    Assert.assertTrue(hasSeededRandom.isGameOver());
+    assertTrue(hasSeededRandom.isGameOver());
   }
 
   // test winner method
@@ -345,7 +363,7 @@ public class ThreeTriosModelTest {
     hasSeededRandom.takeTurn(goatCard, 2, 0);
     hasSeededRandom.takeTurn(rabbitCard, 2, 2);
 
-    Assert.assertEquals("Tie", hasSeededRandom.winner());
+    assertEquals("Blue Player", hasSeededRandom.winner());
   }
 
   // finds winner when there is a winner
@@ -362,29 +380,29 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.takeTurn(this.monkeyCard, 1, 1);
     this.hasSeededRandom.takeTurn(this.goatCard, 0, 0);
 
-    Assert.assertEquals("Blue Player", this.hasSeededRandom.winner());
+    assertEquals("Blue Player", this.hasSeededRandom.winner());
   }
 
   // test getGrid
   @Test
   public void testGetGrid() {
     hasSeededRandom.startGame(deck, true, gridWithNoHoles);
-    Assert.assertEquals(gridWithNoHoles, hasSeededRandom.getGrid());
+    assertEquals(gridWithNoHoles, hasSeededRandom.getGrid());
   }
 
   // test getCurrentPlayer
   @Test
   public void testGetCurrentPlayer() {
     hasSeededRandom.startGame(deck, true, gridWithNoHoles);
-    Assert.assertEquals(redHumanPlayer.getColor(), hasSeededRandom.getCurrentPlayer().getColor());
+    assertEquals(redHumanPlayer.getColor(), hasSeededRandom.getCurrentPlayer().getColor());
   }
 
   // test hasStarted
   @Test
   public void testHasStarted() {
-    Assert.assertFalse(hasSeededRandom.hasStarted());
+    assertFalse(hasSeededRandom.hasStarted());
     hasSeededRandom.startGame(deck, true, gridWithNoHoles);
-    Assert.assertTrue(hasSeededRandom.hasStarted());
+    assertTrue(hasSeededRandom.hasStarted());
   }
 
 
@@ -416,10 +434,10 @@ public class ThreeTriosModelTest {
   public void shouldRemoveFromOwnership() {
     this.redHumanPlayer.addToOwnership(this.ratCard);
     this.redHumanPlayer.addToOwnership(this.pigCard);
-    Assert.assertEquals(2, this.redHumanPlayer.getNumberCardsOwned());
+    assertEquals(2, this.redHumanPlayer.getNumberCardsOwned());
 
     this.redHumanPlayer.removeFromOwnership(this.ratCard);
-    Assert.assertEquals(1, this.redHumanPlayer.getNumberCardsOwned());
+    assertEquals(1, this.redHumanPlayer.getNumberCardsOwned());
   }
 
   // test the addToOwnerShip method
@@ -427,14 +445,14 @@ public class ThreeTriosModelTest {
   @Test
   public void shouldAddCardsToOwnershipProperly() {
     this.redHumanPlayer.addToOwnership(this.ratCard);
-    Assert.assertEquals(1, this.redHumanPlayer.getNumberCardsOwned());
+    assertEquals(1, this.redHumanPlayer.getNumberCardsOwned());
   }
 
   // test the getOwnedCardsOnBoard method
   // when there are no cards owned on the board
   @Test
   public void shouldReturnEmptyOwnedCards() {
-    Assert.assertEquals(List.of(), this.blueHumanPlayer.getOwnedCardsOnGrid());
+    assertEquals(List.of(), this.blueHumanPlayer.getOwnedCardsOnGrid());
   }
 
   // when there are owned cards on the board
@@ -442,7 +460,7 @@ public class ThreeTriosModelTest {
   public void shouldReturnOwnedCards() {
     this.blueHumanPlayer.addToOwnership(this.ratCard);
     List<Card> expectedOwnedCards = List.of(this.ratCard);
-    Assert.assertEquals(expectedOwnedCards, this.blueHumanPlayer.getOwnedCardsOnGrid());
+    assertEquals(expectedOwnedCards, this.blueHumanPlayer.getOwnedCardsOnGrid());
   }
 
   // test the getCardsInHand method
@@ -451,7 +469,7 @@ public class ThreeTriosModelTest {
     this.noSeededRandom.startGame(deck, false, gridWithNoHoles);
     List<Card> expectedHand = List.of(this.ratCard, this.tigerCard, this.dragonCard,
             this.goatCard, this.roosterCard);
-    Assert.assertEquals(expectedHand, this.noSeededRandom.getCurrentPlayer().getCardsInHand());
+    assertEquals(expectedHand, this.noSeededRandom.getCurrentPlayer().getCardsInHand());
   }
 
   // test the getNumberOwnedCards method
@@ -461,7 +479,7 @@ public class ThreeTriosModelTest {
     this.noSeededRandom.startGame(deck, false, gridWithNoHoles);
     Player samplePlayer = this.noSeededRandom.getCurrentPlayer();
     samplePlayer.addToOwnership(this.pigCard);
-    Assert.assertEquals(6, samplePlayer.getNumberCardsOwned());
+    assertEquals(6, samplePlayer.getNumberCardsOwned());
   }
 
   // when no cards have been added to the grid
@@ -469,27 +487,27 @@ public class ThreeTriosModelTest {
   public void shouldReturnNumberOwnedCardsNoGridCards() {
     this.noSeededRandom.startGame(deck, false, gridWithNoHoles);
     Player samplePlayer = this.noSeededRandom.getCurrentPlayer();
-    Assert.assertEquals(5, samplePlayer.getNumberCardsOwned());
+    assertEquals(5, samplePlayer.getNumberCardsOwned());
   }
 
   // test the getColor method
   // when the color is blue
   @Test
   public void shouldReturnBlue() {
-    Assert.assertEquals(this.blueHumanPlayer.getColor(), Color.BLUE);
+    assertEquals(this.blueHumanPlayer.getColor(), Color.BLUE);
   }
 
   // when the color is red
   @Test
   public void shouldReturnRed() {
-    Assert.assertEquals(this.redHumanPlayer.getColor(), Color.RED);
+    assertEquals(this.redHumanPlayer.getColor(), Color.RED);
   }
 
   // test the toString method
   // print out a player
   @Test
   public void shouldReturnStringOfPlayer() {
-    Assert.assertEquals("Player: RED", this.redHumanPlayer.toString());
+    assertEquals("Player: RED", this.redHumanPlayer.toString());
   }
 
   // testing the SimpleCard class
@@ -519,21 +537,21 @@ public class ThreeTriosModelTest {
   @Test
   public void shouldReturnOne() {
     int compare = this.pigCard.compareTo(this.dogCard, Direction.NORTH);
-    Assert.assertEquals(1, compare);
+    assertEquals(1, compare);
   }
 
   // when this card's value is equal to that card's value with the given direction
   @Test
   public void shouldReturnZero() {
     int compare = this.ratCard.compareTo(this.monkeyCard, Direction.NORTH);
-    Assert.assertEquals(0, compare);
+    assertEquals(0, compare);
   }
 
   // when this card's value is less than that card's value with the given direction
   @Test
   public void shouldReturnNegativeOne() {
     int compare = this.ratCard.compareTo(this.monkeyCard, Direction.SOUTH);
-    Assert.assertEquals(-1, compare);
+    assertEquals(-1, compare);
   }
 
   // test the getValueFromDirection method
@@ -547,28 +565,28 @@ public class ThreeTriosModelTest {
   @Test
   public void shouldGetDirectionNorth() {
     int value = this.ratCard.getValueFromDirection(Direction.NORTH);
-    Assert.assertEquals(10, value);
+    assertEquals(10, value);
   }
 
   // gets the value from South direction
   @Test
   public void shouldGetDirectionSouth() {
     int value = this.tigerCard.getValueFromDirection(Direction.SOUTH);
-    Assert.assertEquals(1, value);
+    assertEquals(1, value);
   }
 
   // gets the value from North direction
   @Test
   public void shouldGetDirectionEast() {
     int value = this.rabbitCard.getValueFromDirection(Direction.EAST);
-    Assert.assertEquals(10, value);
+    assertEquals(10, value);
   }
 
   // gets the value from North direction
   @Test
   public void shouldGetDirectionWest() {
     int value = this.dragonCard.getValueFromDirection(Direction.WEST);
-    Assert.assertEquals(1, value);
+    assertEquals(1, value);
   }
 
   // test the getName method
@@ -578,14 +596,14 @@ public class ThreeTriosModelTest {
     String name = this.ratCard.getName();
     name += "bleh";
 
-    Assert.assertEquals("rat", this.ratCard.getName());
+    assertEquals("rat", this.ratCard.getName());
   }
 
   // gets the name
   @Test
   public void shouldReturnGetName() {
     String name = this.ratCard.getName();
-    Assert.assertEquals("rat", this.ratCard.getName());
+    assertEquals("rat", this.ratCard.getName());
   }
 
   // test the copy method
@@ -594,14 +612,14 @@ public class ThreeTriosModelTest {
   public void shouldReturnCopyOfCard() {
     Card copiedCard = this.snakeCard.copy();
     boolean isEqual = this.snakeCard.equals(copiedCard);
-    Assert.assertTrue(isEqual);
+    assertTrue(isEqual);
   }
 
   // makes sure that changing something in the copied card doesn't change anything in the original
   @Test
   public void shouldNotMutateOriginalCopyOfCard() {
     Card copiedCard = this.snakeCard.copy();
-    Assert.assertEquals(this.snakeCard, copiedCard);
+    assertEquals(this.snakeCard, copiedCard);
 
     Map<Direction, Value> newValues = new HashMap<>();
     newValues.put(Direction.NORTH, Value.TWO);
@@ -610,8 +628,8 @@ public class ThreeTriosModelTest {
     newValues.put(Direction.WEST, Value.FIVE);
 
     copiedCard = new SimpleCard(copiedCard.getName(), newValues);
-    Assert.assertEquals(10, this.snakeCard.getValueFromDirection(Direction.NORTH));
-    Assert.assertEquals(this.snakeCard, this.snakeCard);
+    assertEquals(10, this.snakeCard.getValueFromDirection(Direction.NORTH));
+    assertEquals(this.snakeCard, this.snakeCard);
   }
 
   // test the toString method
@@ -619,21 +637,21 @@ public class ThreeTriosModelTest {
   @Test
   public void printOutCard() {
     String result = this.horseCard.toString();
-    Assert.assertEquals("horse 2 8 2 3 ", result);
+    assertEquals("horse 2 8 2 3 ", result);
   }
 
   // print out another card
   @Test
   public void printOutCard2() {
     String result = this.roosterCard.toString();
-    Assert.assertEquals("rooster 1 1 1 1 ", result);
+    assertEquals("rooster 1 1 1 1 ", result);
   }
 
   // print out a card with an A
   @Test
   public void printOutCardWithA() {
     String result = this.goatCard.toString();
-    Assert.assertEquals("goat A 6 4 7 ", result);
+    assertEquals("goat A 6 4 7 ", result);
   }
 
   // test GameGrid
@@ -651,7 +669,7 @@ public class ThreeTriosModelTest {
   @Test
   public void testPlaceCardOnEmptyCell() {
     gridWithNoHoles.placeCard(goatCard, 0, 0);
-    Assert.assertEquals(goatCard, gridWithNoHoles.getCard(0, 0));
+    assertEquals(goatCard, gridWithNoHoles.getCard(0, 0));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -678,18 +696,18 @@ public class ThreeTriosModelTest {
   // test validCell
   @Test
   public void testValidCellOnEmptyCell() {
-    Assert.assertTrue(gridWithNoHoles.validCell(0, 0));
+    assertTrue(gridWithNoHoles.validCell(0, 0));
   }
 
   @Test
   public void testValidCellOnHole() {
-    Assert.assertFalse(gridWithHoles.validCell(0, 1));
+    assertFalse(gridWithHoles.validCell(0, 1));
   }
 
   @Test
   public void testValidCellOnOccupiedCell() {
     gridWithNoHoles.placeCard(rabbitCard, 2, 2);
-    Assert.assertFalse(gridWithNoHoles.validCell(2, 2));
+    assertFalse(gridWithNoHoles.validCell(2, 2));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -704,47 +722,47 @@ public class ThreeTriosModelTest {
     gridWithNoHoles.placeCard(dragonCard, 1, 2);
 
     var adjacentCards = gridWithNoHoles.getAdjacentCardsWithDirections(1, 1);
-    Assert.assertEquals(1, adjacentCards.size());
-    Assert.assertTrue(adjacentCards.containsKey("dragon"));
-    Assert.assertEquals(Direction.EAST, adjacentCards.get("dragon"));
+    assertEquals(1, adjacentCards.size());
+    assertTrue(adjacentCards.containsKey("dragon"));
+    assertEquals(Direction.EAST, adjacentCards.get("dragon"));
   }
 
   // test getCardCellCount
   @Test
   public void testGetCardCellCountWithHoles() {
-    Assert.assertEquals(5, gridWithHoles.getCardCellCount());
+    assertEquals(5, gridWithHoles.getCardCellCount());
   }
 
   @Test
   public void testGetCardCellCountNoHoles() {
-    Assert.assertEquals(9, gridWithNoHoles.getCardCellCount());
+    assertEquals(9, gridWithNoHoles.getCardCellCount());
   }
 
   // test getCells
   @Test
   public void testGetCellsReturnsCorrectGrid() {
     Cell[][] cells = gridWithNoHoles.getCells();
-    Assert.assertEquals(3, cells.length);
-    Assert.assertEquals(3, cells[0].length);
+    assertEquals(3, cells.length);
+    assertEquals(3, cells[0].length);
   }
 
   // test getNumRows
   @Test
   public void testGetNumRows() {
-    Assert.assertEquals(3, gridWithNoHoles.getNumRows());
+    assertEquals(3, gridWithNoHoles.getNumRows());
   }
 
   // test getNumCols
   @Test
   public void testGetNumCols() {
-    Assert.assertEquals(3, gridWithNoHoles.getNumCols());
+    assertEquals(3, gridWithNoHoles.getNumCols());
   }
 
   // test getCard
   @Test
   public void testGetCard() {
     gridWithNoHoles.placeCard(pigCard, 2, 2);
-    Assert.assertEquals(pigCard, gridWithNoHoles.getCard(2, 2));
+    assertEquals(pigCard, gridWithNoHoles.getCard(2, 2));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -777,21 +795,21 @@ public class ThreeTriosModelTest {
   // test hasCard
   @Test
   public void testHasCardInitiallyFalse() {
-    Assert.assertFalse(cellWithoutHole.hasCard());
+    assertFalse(cellWithoutHole.hasCard());
   }
 
   // after placing a card
   @Test
   public void testHasCardAfterPlacingCard() {
     cellWithoutHole.placeCard(goatCard);
-    Assert.assertTrue(cellWithoutHole.hasCard());
+    assertTrue(cellWithoutHole.hasCard());
   }
 
   // test placeCard
   @Test
   public void testPlaceCardInEmptyCell() {
     cellWithoutHole.placeCard(goatCard);
-    Assert.assertEquals(goatCard, cellWithoutHole.getCard());
+    assertEquals(goatCard, cellWithoutHole.getCard());
   }
 
   // if the cell is occupied
@@ -812,7 +830,7 @@ public class ThreeTriosModelTest {
   public void testRemoveCard() {
     cellWithoutHole.placeCard(goatCard);
     cellWithoutHole.removeCard();
-    Assert.assertFalse(cellWithoutHole.hasCard());
+    assertFalse(cellWithoutHole.hasCard());
   }
 
   // removing card from an empty cell
@@ -829,19 +847,19 @@ public class ThreeTriosModelTest {
   // test isHole()
   @Test
   public void testIsHoleTrue() {
-    Assert.assertTrue(cellWithHole.isHole());
+    assertTrue(cellWithHole.isHole());
   }
 
   @Test
   public void testIsHoleFalse() {
-    Assert.assertFalse(cellWithoutHole.isHole());
+    assertFalse(cellWithoutHole.isHole());
   }
 
   // test getCard
   @Test
   public void testGetCardFromOccupiedCell() {
     cellWithoutHole.placeCard(goatCard);
-    Assert.assertEquals(goatCard, cellWithoutHole.getCard());
+    assertEquals(goatCard, cellWithoutHole.getCard());
   }
 
   @Test(expected = IllegalStateException.class)
@@ -877,7 +895,7 @@ public class ThreeTriosModelTest {
             new SimpleCard("CrazyCat", Value.SIX, Value.SIX, Value.SEVEN, Value.ONE);
     List<Card> expected = List.of(sleepyCat, creepyCat, happyCat, angryCat, weepyCat, crazyCat);
 
-    Assert.assertEquals(expected, result);
+    assertEquals(expected, result);
   }
 
 
@@ -897,8 +915,8 @@ public class ThreeTriosModelTest {
             {true, false, true, true},
     };
 
-    Assert.assertEquals(expectedNumRows, result.getNumRows());
-    Assert.assertEquals(expectedNumCols, result.getNumCols());
+    assertEquals(expectedNumRows, result.getNumRows());
+    assertEquals(expectedNumCols, result.getNumCols());
     Assert.assertArrayEquals(expectedHoleLayout, result.getHoleLayout());
   }
 
@@ -917,8 +935,8 @@ public class ThreeTriosModelTest {
             {false, false, true, true}
     };
 
-    Assert.assertEquals(expectedNumRows, result.getNumRows());
-    Assert.assertEquals(expectedNumCols, result.getNumCols());
+    assertEquals(expectedNumRows, result.getNumRows());
+    assertEquals(expectedNumCols, result.getNumCols());
     Assert.assertArrayEquals(expectedHoleLayout, result.getHoleLayout());
   }
 
@@ -937,8 +955,8 @@ public class ThreeTriosModelTest {
             {false, false, false}
     };
 
-    Assert.assertEquals(expectedNumRows, result.getNumRows());
-    Assert.assertEquals(expectedNumCols, result.getNumCols());
+    assertEquals(expectedNumRows, result.getNumRows());
+    assertEquals(expectedNumCols, result.getNumCols());
     Assert.assertArrayEquals(expectedHoleLayout, result.getHoleLayout());
   }
 
@@ -955,10 +973,10 @@ public class ThreeTriosModelTest {
   public void shouldNotMutateGetRedPlayer() {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     int numCards = this.hasSeededRandom.getRedPlayer().size();
-    Assert.assertEquals(5, numCards);
+    assertEquals(5, numCards);
     List<Card> redPlayerCards = this.hasSeededRandom.getRedPlayer();
     redPlayerCards.add(this.roosterCard);
-    Assert.assertEquals(5, this.hasSeededRandom.getRedPlayer().size());
+    assertEquals(5, this.hasSeededRandom.getRedPlayer().size());
   }
 
   // make sure correct cards
@@ -967,7 +985,7 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     List<Card> expectedCards = List.of(this.ratCard, this.tigerCard, this.dragonCard,
             this.goatCard, this.roosterCard);
-    Assert.assertEquals(expectedCards, this.hasSeededRandom.getRedPlayer());
+    assertEquals(expectedCards, this.hasSeededRandom.getRedPlayer());
   }
 
   // test getBluePlayer method
@@ -981,10 +999,10 @@ public class ThreeTriosModelTest {
   public void shouldNotMutateGetBluePlayer() {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     int numCards = this.hasSeededRandom.getBluePlayer().size();
-    Assert.assertEquals(5, numCards);
+    assertEquals(5, numCards);
     List<Card> redPlayerCards = this.hasSeededRandom.getBluePlayer();
     redPlayerCards.add(this.roosterCard);
-    Assert.assertEquals(5, this.hasSeededRandom.getBluePlayer().size());
+    assertEquals(5, this.hasSeededRandom.getBluePlayer().size());
   }
 
   // make sure correct cards
@@ -993,7 +1011,7 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     List<Card> expectedCards = List.of(this.oxCard, this.rabbitCard, this.horseCard,
             this.monkeyCard, this.dogCard);
-    Assert.assertEquals(expectedCards, this.hasSeededRandom.getBluePlayer());
+    assertEquals(expectedCards, this.hasSeededRandom.getBluePlayer());
   }
 
   // test getOwnerAtCell method
@@ -1032,7 +1050,7 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     this.hasSeededRandom.takeTurn(this.ratCard, 0, 0);
     String player = this.hasSeededRandom.getOwnerAtCell(0, 0).getColor().toString();
-    Assert.assertEquals(player, "RED");
+    assertEquals(player, "RED");
   }
 
   // when the blue player owns the cell
@@ -1042,7 +1060,7 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.takeTurn(this.ratCard, 0, 0);
     this.hasSeededRandom.takeTurn(this.monkeyCard, 0, 1);
     String player = this.hasSeededRandom.getOwnerAtCell(0, 1).getColor().toString();
-    Assert.assertEquals(player, "BLUE");
+    assertEquals(player, "BLUE");
   }
 
   // when there is no owner at the cell
@@ -1063,13 +1081,13 @@ public class ThreeTriosModelTest {
   @Test
   public void shouldBeFalseLegalPlayRowOutOfBounds() {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
-    Assert.assertFalse(this.hasSeededRandom.isLegalToPlay(10, 0));
+    assertFalse(this.hasSeededRandom.isLegalToPlay(10, 0));
   }
 
   @Test
   public void shouldBeFalseLegalPlayColOutOfBounds() {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
-    Assert.assertFalse(this.hasSeededRandom.isLegalToPlay(0, 10));
+    assertFalse(this.hasSeededRandom.isLegalToPlay(0, 10));
   }
 
   // when it is a hole
@@ -1078,14 +1096,14 @@ public class ThreeTriosModelTest {
     List<Card> holesDeck = List.of(this.ratCard, this.rabbitCard, this.horseCard, this.monkeyCard,
             this.dogCard, this.snakeCard);
     this.hasSeededRandom.startGame(holesDeck, false, this.gridWithHoles);
-    Assert.assertFalse(this.hasSeededRandom.isLegalToPlay(0, 1));
+    assertFalse(this.hasSeededRandom.isLegalToPlay(0, 1));
   }
 
   // when the row and col are in bounds
   @Test
   public void shouldBeTrueLegalPlay() {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
-    Assert.assertFalse(this.hasSeededRandom.isLegalToPlay(0, 10));
+    assertFalse(this.hasSeededRandom.isLegalToPlay(0, 10));
   }
 
   // test howManyWillFlip method
@@ -1129,7 +1147,7 @@ public class ThreeTriosModelTest {
   public void shouldReturnZeroFlipsNoCardNear() {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     int flips = this.hasSeededRandom.howManyWillFlip(this.ratCard, 0, 0);
-    Assert.assertEquals(0, flips);
+    assertEquals(0, flips);
   }
 
   // when something will flip
@@ -1138,7 +1156,7 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     this.hasSeededRandom.takeTurn(this.ratCard, 0, 0);
     int flips = this.hasSeededRandom.howManyWillFlip(this.monkeyCard, 0, 1);
-    Assert.assertEquals(1, flips);
+    assertEquals(1, flips);
   }
 
   // test currentScore method
@@ -1159,7 +1177,7 @@ public class ThreeTriosModelTest {
   public void shouldReturnHandScore() {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     int score = this.hasSeededRandom.currentScore(Color.RED);
-    Assert.assertEquals(5, score);
+    assertEquals(5, score);
   }
 
   // when cards have been played, but not flipped
@@ -1168,11 +1186,11 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     this.hasSeededRandom.takeTurn(this.ratCard, 0, 0);
     // red player's score
-    Assert.assertEquals(5,
+    assertEquals(5,
             this.hasSeededRandom.currentScore(Color.RED));
     this.hasSeededRandom.takeTurn(this.oxCard, 2, 2);
     // blue player's score
-    Assert.assertEquals(5,
+    assertEquals(5,
             this.hasSeededRandom.currentScore(Color.BLUE));
   }
 
@@ -1182,16 +1200,16 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     this.hasSeededRandom.takeTurn(this.ratCard, 0, 0);
     // red player's score (should still be the same)
-    Assert.assertEquals(5,
+    assertEquals(5,
             this.hasSeededRandom.currentScore(Color.RED));
-    Assert.assertEquals(5,
+    assertEquals(5,
             this.hasSeededRandom.currentScore(Color.BLUE));
     this.hasSeededRandom.takeTurn(this.monkeyCard, 0,1);
     // blue player's new score now that card is flipped
-    Assert.assertEquals(6,
+    assertEquals(6,
             this.hasSeededRandom.currentScore(Color.BLUE));
     // red player's new score now that card is flipped
-    Assert.assertEquals(4,
+    assertEquals(4,
             this.hasSeededRandom.currentScore(Color.RED));
   }
 
@@ -1201,20 +1219,69 @@ public class ThreeTriosModelTest {
     this.hasSeededRandom.startGame(this.deck, false, this.gridWithNoHoles);
     this.hasSeededRandom.takeTurn(this.ratCard, 0, 0);
     // red player's score (should still be the same)
-    Assert.assertEquals(5,
+    assertEquals(5,
             this.hasSeededRandom.currentScore(Color.RED));
-    Assert.assertEquals(5,
+    assertEquals(5,
             this.hasSeededRandom.currentScore(Color.BLUE));
     this.hasSeededRandom.takeTurn(this.dogCard, 2,2);
     // blue player's new score now that card is flipped
-    Assert.assertEquals(5,
+    assertEquals(5,
             this.hasSeededRandom.currentScore(Color.BLUE));
     // red player's new score now that card is flipped
-    Assert.assertEquals(5,
+    assertEquals(5,
             this.hasSeededRandom.currentScore(Color.RED));
     this.hasSeededRandom.takeTurn(this.roosterCard, 2,0);
     this.hasSeededRandom.takeTurn(this.monkeyCard, 1,0);
-    Assert.assertEquals(3, this.hasSeededRandom.currentScore(Color.RED));
-    Assert.assertEquals(7, this.hasSeededRandom.currentScore(Color.BLUE));
+    assertEquals(3, this.hasSeededRandom.currentScore(Color.RED));
+    assertEquals(7, this.hasSeededRandom.currentScore(Color.BLUE));
+  }
+
+  // Testing AI player
+
+  @Test
+  public void testTakeTurn() {
+    // Run the AI's turn
+    testAIPlayer.addToHand(this.rabbitCard);
+    testAIPlayer.addToHand(this.oxCard);
+
+   //  testAIPlayer.takeTurn();
+    assertEquals(2, testAIPlayer.getCardsInHand().size());
+    // assertEquals(testAIPlayer, this.hasSeededRandom.getOwnerAtCell(0, 0));
+  }
+
+  @Test
+  public void testAddToHand() {
+    testAIPlayer.addToHand(rabbitCard);
+    assertEquals(1, testAIPlayer.getCardsInHand().size());
+    assertTrue(testAIPlayer.getCardsInHand().contains(rabbitCard));
+  }
+
+  @Test
+  public void testRemoveFromHand() {
+    testAIPlayer.removeFromHand(rabbitCard);
+    assertEquals(0, testAIPlayer.getCardsInHand().size());
+    assertFalse(testAIPlayer.getCardsInHand().contains(rabbitCard));
+  }
+
+  @Test
+  public void testAddToOwnership() {
+    testAIPlayer.addToOwnership(oxCard);
+    assertEquals(1, testAIPlayer.getOwnedCardsOnGrid().size());
+    assertTrue(testAIPlayer.getOwnedCardsOnGrid().contains(oxCard));
+  }
+
+  @Test
+  public void testRemoveFromOwnership() {
+    testAIPlayer.addToOwnership(oxCard);
+    testAIPlayer.removeFromOwnership(oxCard);
+
+    assertEquals(0, testAIPlayer.getOwnedCardsOnGrid().size());
+    assertFalse(testAIPlayer.getOwnedCardsOnGrid().contains(oxCard));
+  }
+
+  @Test
+  public void testGetNumberCardsOwned() {
+    testAIPlayer.addToOwnership(oxCard);
+    assertEquals(1, testAIPlayer.getNumberCardsOwned());
   }
 }
