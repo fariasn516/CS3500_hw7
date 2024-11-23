@@ -22,7 +22,6 @@ public class ThreeTriosPlayerController implements PlayerController {
   ThreeTriosFrameView view; // represents the view that shows the game state as a GUI
   Card selectedCard; // represents the card that is currently selected
   boolean yourTurn; // represents whether it is this player's turn
-  boolean turnOver;
 
   /**
    *
@@ -49,7 +48,6 @@ public class ThreeTriosPlayerController implements PlayerController {
     this.player.addListener(this);
 
     this.yourTurn = this.player.getColor().equals(Color.RED);
-    this.turnOver = false;
   }
 
   @Override
@@ -72,9 +70,9 @@ public class ThreeTriosPlayerController implements PlayerController {
     else {
       view.showMessage("Not your turn!");
     }
-    this.turnOver = false;
     this.view.refresh();
   }
+
   private void checkTurn() {
     this.yourTurn = this.player.getColor().equals(this.model.getCurrentPlayer().getColor());
   }
@@ -99,6 +97,7 @@ public class ThreeTriosPlayerController implements PlayerController {
 
   @Override
   public void notifyStatus() {
+    this.view.refresh();
     yourTurn = model.getCurrentPlayer().getColor().equals(player.getColor());
     if (this.model.isGameOver()) {
       if (this.model.winner().equals("Tie")) {
