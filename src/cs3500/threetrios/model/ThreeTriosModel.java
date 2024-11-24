@@ -1,4 +1,5 @@
 package cs3500.threetrios.model;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -168,13 +169,15 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
 
 
       Card adjCard = grid.getCard(adjRow, adjCol);
-      if (adjCard == null) continue;
+      if (adjCard == null) {
+        continue;
+      }
 
 
       Color adjCardColor = getCardOwnerColor(adjCard);
       if (adjCardColor != null && adjCardColor != sourceColor) {
-        if (sourceCard.getValueFromDirection(direction) >
-                adjCard.getValueFromDirection(oppositeDirection)) {
+        if (sourceCard.getValueFromDirection(direction)
+                > adjCard.getValueFromDirection(oppositeDirection)) {
 
 
           flipCard(adjCard, adjRow, adjCol, sourceColor);
@@ -366,7 +369,7 @@ public class ThreeTriosModel implements Model, ReadOnlyModel, ModelStatus {
 
 
   /**
-   *
+   * Checks the state of the game.
    */
   private void checkGameState() {
     if (!started) {

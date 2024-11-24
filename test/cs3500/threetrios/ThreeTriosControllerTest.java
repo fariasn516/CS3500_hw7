@@ -2,12 +2,12 @@ package cs3500.threetrios;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import cs3500.threetrios.controller.Controller;
 import cs3500.threetrios.controller.ThreeTriosSwingController;
 import cs3500.threetrios.model.Color;
 import cs3500.threetrios.view.ThreeTriosFrameView;
 import cs3500.threetrios.view.ThreeTriosModelView;
+
 
 /**
  * Tests for the controller.

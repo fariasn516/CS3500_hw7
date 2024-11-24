@@ -110,10 +110,20 @@ Changes Made in Part 2:
             -ThreeTriosPanel (class): Implements ThreeTriosPanelView, managing the panel-level display for the game.
 
 Changes Made in Part 3:
+    Fixed Flooding in the Battling Phase of Model:
+        -Resolved an issue in the battling phase where excessive card flipping occurred due to improper adjacency checks.
+        -Improved the logic to ensure that chain reactions of flips are calculated accurately and terminate correctly, preventing infinite loops.
+
     New Classes and Interfaces
-    -View Package (cs3500.threetrios.view)
-        -PlayerAction (interface)
-    -Model Package (cs3500.threetrios.model)
-        -ModelStatus (interface)
-    -Controller Package (cs3500.threetrios.controller)
-        -PlayerController (interface)
+        -View Package (cs3500.threetrios.view):
+        -PlayerAction (interface):
+            -Defines the structure for actions performed by players, including moves and card placements.
+            -Allows interaction between the controller and the view
+        -Model Package (cs3500.threetrios.model):
+        -ModelStatus (interface):
+            -Provides a querying method of the game model's current state.
+            -Separates observation methods from modification methods in the model
+        -Controller Package (cs3500.threetrios.controller):
+        -PlayerController (interface):
+            -Defines the structure for controllers managing individual players.
+            -Allows the controller to handle player input (human or AI) and execute actions in the model.

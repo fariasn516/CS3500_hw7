@@ -34,8 +34,8 @@ public interface ThreeTriosFrameView {
   boolean isGameOverMessageShown();
 
   /**
-   *
-   * @param shown
+   * Sets the boolean value to given boolean.
+   * @param shown boolean value to which GameOver message value will be changed to.
    */
   void setGameOverMessageShown(boolean shown);
 }
